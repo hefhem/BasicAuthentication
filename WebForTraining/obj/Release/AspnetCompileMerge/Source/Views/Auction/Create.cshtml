@@ -1,0 +1,29 @@
+﻿@model WebForTraining.Models.Auction
+@{
+    ViewBag.Title = "Create";
+}
+
+<h2>Create Auction</h2>
+@using (Html.BeginForm())
+{
+    <p>
+        @Html.LabelFor(model => model.Title)
+        @Html.EditorFor(model => model.Title)
+    </p>
+    <p>
+        @Html.LabelFor(model => model.Description)
+        @Html.EditorFor(model => model.Description)
+    </p>
+    <p>
+        @Html.LabelFor(model => model.StartPrice)
+        @Html.EditorFor(model => model.StartPrice)
+    </p>
+    <p>
+        @Html.LabelFor(model => model.EndTime)
+        @Html.EditorFor(model => model.EndTime)
+    </p>
+    <p>
+        <input type="submit" value="Create" />
+    </p>
+}
+

@@ -1,0 +1,69 @@
+﻿@using WebForTraining.Models;
+@using WebForTraining.Database;
+@{
+
+    Layout = null;
+    var City = Administration.getCity();
+
+    var UserID = int.Parse(Session["UserID"].ToString());
+    List<ClsUserDisplay> userDisplay = new List<ClsUserDisplay>();
+    using (tdoEntities db = new tdoEntities())
+    {
+        userDisplay = db.uspGetUserDisplay(UserID).ToList<ClsUserDisplay>();
+    }
+    List<string> viewableForms = Restriction.GetViewableForms(userDisplay);
+}
+
+@if (!viewableForms.Contains("City"))
+{
+    <div class="alert alert-warning">You do not have permision to view records.</div>
+    return;
+}
+
+@if (City != null)
+{
+
+    <div class="table-resposive">
+
+    <table class="table table-striped responsive-utilities jambo_table dataTables" id="tblCity">
+        <thead>
+            <tr>
+                <th style="width:7%"><input type="checkbox" class="selCity" onclick="checkAll(this, 'selCity');" /></th>
+                <th>City Name</th>
+				<th>City Code</th>
+                <th>State Name</th>
+                <th>Edit</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var cit in City)
+            {
+                <tr>
+                    <td style="width:7%"><input type="checkbox" value="@cit.cityID" class="selCity" /></td>
+                    <td><span class="underline">@cit.cityName</span></td>
+					<td><span class="underline">@cit.cityCode</span></td>
+                    <td><span class="underline">@cit.stateName</span></td>
+                    <td style="width:7%">
+                        <a data-id="@cit.cityID" onclick="javascript: ld_modal_fm('/Administration/AddEditCity', 'modalContentLoad', '@cit.cityID');" class="btn btn-metro btn-info btn-xs">
+                            <i class="fa fa-pencil"></i>
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    </div>
+
+}
+else
+{
+    <div class="alert alert-warning">No record to display</div>
+}
+
+<script>
+    styleTable('tblCity');
+</script>
+
+
+

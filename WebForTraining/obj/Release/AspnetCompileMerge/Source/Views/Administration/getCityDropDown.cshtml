@@ -1,0 +1,29 @@
+﻿@using WebForTraining.Models;
+@using WebForTraining.Database;
+@{
+    Layout = null;
+    var stateID = int.Parse(Request.Params["stateID"]);
+    var Location = Administration.getCity().Where(p => p.stateID == stateID);
+}
+@if (Location != null)
+{
+    <option value="">Select a Destination</option>
+    foreach (var lc in Location)
+    {
+        <option value="@lc.cityID">@lc.cityName</option>
+    }
+}
+else
+{
+    <option value="">No record to display</option>
+}
+
+
+
+
+
+
+
+
+
+

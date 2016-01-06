@@ -1,0 +1,72 @@
+﻿@using WebForTraining.Models;
+@using WebForTraining.Database;
+@{
+    //var employeeID = Request.Params["employeeID"];
+    //var token = Session["Token"].ToString();
+    Layout = null;
+    //List<string> AuthForms = (List<string>)Session["Forms"];
+    var MenuItems = Administration.getMenuItems(0);
+    var UserID = int.Parse(Session["UserID"].ToString());
+    List<ClsUserDisplay> userDisplay = new List<ClsUserDisplay>();
+    using (tdoEntities db = new tdoEntities())
+    {
+        userDisplay = db.uspGetUserDisplay(UserID).ToList<ClsUserDisplay>();
+    }
+    List<string> viewableForms = Restriction.GetViewableForms(userDisplay);
+}
+
+@if (!viewableForms.Contains("MenuItems"))
+{
+    <div class="alert alert-warning">You do not have permision to view records.</div>
+    return;
+}
+@if (MenuItems != null)
+{
+    <div class="table-resposive">
+        <table class="table table-striped responsive-utilities jambo_table dataTable" id="tblMenuItems">
+            <thead>
+                <tr>
+                    <th><input type="checkbox" class="selMenuItems" onclick="checkAll(this, 'selMenuItems');" /></th>
+                    <th><strong>Menu Item Name</strong></th>
+                    <th><strong>Description</strong></th>
+                    <th><strong>Menu</strong></th>
+                    <th><strong>Rank</strong></th>
+                    <th><strong></strong></th>
+                </tr>
+            </thead>
+            <tbody id="tblMenuItems">
+                @foreach (var mn in MenuItems)
+                {
+                    <tr>
+                        <td><input type="checkbox" value="@mn.menuItemID" class="selMenuItems" /></td>
+                        <td><span class="underline">@mn.menuItemName</span></td>
+                        <td>@mn.menuItemDescription</td>
+                        <td>@mn.menuName</td>
+                        <td>@mn.menuItemRanking</td>
+                        <td>
+                            <a data-id="@mn.menuItemID" onclick="javascript: ld_modal_fm('/Administration/AddEditMenuItems', 'modalContentLoad', '@mn.menuItemID');" class="btn btn-metro btn-info btn-xs">
+                                <i class="fa fa-pencil"></i>
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <div class="alert alert-warning">No record to display</div>
+}
+
+<script>
+    styleTable('tblMenuItems');
+</script>
+
+
+
+
+
+
+
+

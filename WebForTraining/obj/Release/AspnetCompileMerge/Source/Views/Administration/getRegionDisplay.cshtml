@@ -1,0 +1,65 @@
+﻿@using WebForTraining.Models;
+@using WebForTraining.Database;
+@{
+
+    Layout = null;
+    var Region = Administration.getRegion();
+
+    var UserID = int.Parse(Session["UserID"].ToString());
+    List<ClsUserDisplay> userDisplay = new List<ClsUserDisplay>();
+    using (tdoEntities db = new tdoEntities())
+    {
+        userDisplay = db.uspGetUserDisplay(UserID).ToList<ClsUserDisplay>();
+    }
+    List<string> viewableForms = Restriction.GetViewableForms(userDisplay);
+}
+
+@if (!viewableForms.Contains("Region"))
+{
+    <div class="alert alert-warning">You do not have permision to view records.</div>
+    return;
+}
+
+@if (Region != null)
+{
+
+    <div class="table-resposive">
+
+    <table class="table table-striped responsive-utilities jambo_table dataTables" id="tblRegion">
+        <thead>
+            <tr>
+                <th style="width:7%"><input type="checkbox" class="selRegion" onclick="checkAll(this, 'selRegion');" /></th>
+                <th>Region</th>
+                <th>Edit</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var rgn in Region)
+            {
+                <tr>
+                    <td style="width:7%"><input type="checkbox" value="@rgn.regionID" class="selRegion" /></td>
+                    <td><span class="underline">@rgn.regionName</span></td>
+                    <td style="width:7%">
+                        <a data-id="@rgn.regionID" onclick="javascript: ld_modal_fm('/Administration/AddEditRegion', 'modalContentLoad', '@rgn.regionID');" class="btn btn-metro btn-info btn-xs">
+                            <i class="fa fa-pencil"></i>
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    </div>
+
+}
+else
+{
+    <div class="alert alert-warning">No record to display</div>
+}
+
+<script>
+    styleTable('tblRegion');
+</script>
+
+
+

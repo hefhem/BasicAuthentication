@@ -1,0 +1,65 @@
+﻿@using WebForTraining.Models;
+@using WebForTraining.Database;
+@{
+
+    Layout = null;
+    var CargoType = Administration.getCargoType();
+    
+    var UserID = int.Parse(Session["UserID"].ToString());
+    List<ClsUserDisplay> userDisplay = new List<ClsUserDisplay>();
+    using (tdoEntities db = new tdoEntities())
+    {
+        userDisplay = db.uspGetUserDisplay(UserID).ToList<ClsUserDisplay>();
+    }
+    List<string> viewableForms = Restriction.GetViewableForms(userDisplay);
+}
+
+@if (!viewableForms.Contains("CargoType"))
+{
+    <div class="alert alert-warning">You do not have permision to view records.</div>
+    return;
+}
+
+@if (CargoType != null)
+{
+   
+    <div class="table-resposive">
+
+        <table class="table table-striped responsive-utilities jambo_table dataTable" id="tblCargoType">
+            <thead>
+                <tr>
+                    <th><input type="checkbox" class="selCargoType" onclick="checkAll(this, 'selCargoType');" /></th>
+                    <th>Cargo Type</th>
+                    <th>Edit</th>
+                </tr>
+            </thead>
+            <tbody id="tblCargoType">
+                @foreach (var cgt in CargoType)
+                {
+                    <tr>
+                        <td style="width:7%"><input type="checkbox" value="@cgt.cargoTypeID" class="selCargoType" /></td>
+                        <td><span class="underline">@cgt.cargoTypeName</span></td>
+                        <td style="width:7%">
+                            <a data-id="@cgt.cargoTypeID" onclick="javascript: ld_modal_fm('/Administration/AddEditCargoType', 'modalContentLoad', '@cgt.cargoTypeID');" class="btn btn-metro btn-info btn-xs">
+                                <i class="fa fa-pencil"></i>
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    </div>
+    
+}
+else
+{
+    <div class="alert alert-warning">No record to display</div>
+}
+
+<script>
+    styleTable('tblCargoType');
+</script>
+
+
+

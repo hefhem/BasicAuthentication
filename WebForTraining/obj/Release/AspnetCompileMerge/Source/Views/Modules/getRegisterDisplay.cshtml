@@ -1,0 +1,131 @@
+﻿@using WebForTraining.Models;
+@using WebForTraining.Database;
+@{
+
+    Layout = null;
+    var registerID = 0;
+    if (Request.Params["id"] != null)
+    {
+        registerID = int.Parse(Request.Params["id"]);
+    } 
+    var Register = Modules.getRegister(0).Where(p => p.status.Contains("Cancelled") || p.status.Contains("Received"));
+    var Register2 = Modules.getRegister(0).Where(p => p.status.Contains("Received"));
+    var UserID = int.Parse(Session["UserID"].ToString());
+    List<ClsUserDisplay> userDisplay = new List<ClsUserDisplay>();
+    using (tdoEntities db = new tdoEntities())
+    {
+        userDisplay = db.uspGetUserDisplay(UserID).ToList<ClsUserDisplay>();
+    }
+    List<string> viewableForms = Restriction.GetViewableForms(userDisplay);
+}
+
+@if (!viewableForms.Contains("Register"))
+{
+    <div class="alert alert-warning">You do not have permision to view records.</div>
+    return;
+}
+
+@if (Register != null && registerID == 0)
+{
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">×</span>
+            </button>
+            <h4 class="modal-title" id="myModalLabel2">Find Register</h4>
+        </div>
+            <div class="modal-body ">
+                <div class="table-resposive">
+
+                    <table class="table table-striped responsive-utilities jambo_table dataTable" id="tbl">
+                        <thead>
+                            <tr>
+                                <th>Job Number</th>
+                                <th>Date Received</th>
+                                <th>File Reference</th>
+                                <th>Status</th>
+                                <th>Edit</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tblCargoType">
+                            @foreach (var rg in Register)
+                            {
+                                <tr>
+                                    <td><span class="underline">@rg.jobNumber</span></td>
+                                    <td><span class="underline">@(String.Format("{0:dd-MM-yyyy}", @rg.dateReceived))</span></td>
+                                    <td><span class="underline">@rg.fileRef</span></td>
+                                    <td><span class="underline">@rg.status</span></td>
+                                    <td style="width:7%">
+                                        <a data-id="@rg.tdoRegisterID" onclick="javascript: ld_fm_with_id('@rg.tdoRegisterID', '/Modules/Register', 'pageContent');" class="btn btn-metro btn-info btn-xs">
+                                            <i class="fa fa-pencil"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <br/>
+                <br/>
+            </div>
+    </div>
+}
+else
+{
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">×</span>
+            </button>
+            <h4 class="modal-title" id="myModalLabel2">Copy from Register</h4>
+        </div>
+        <div class="modal-body ">
+            <div class="table-resposive">
+
+                <table class="table table-striped responsive-utilities jambo_table dataTable" id="tbl">
+                    <thead>
+                        <tr>
+                            <th>Job Number</th>
+                            <th>Date Received</th>
+                            <th>File Reference</th>
+                            <th>Status</th>
+                            <th>Edit</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tblCargoType">
+                        @foreach (var rg in Register2)
+                        {
+                            <tr>
+                                <td><span class="underline">@rg.jobNumber</span></td>
+                                <td><span class="underline">@(String.Format("{0:dd-MM-yyyy}", @rg.dateReceived))</span></td>
+                                <td><span class="underline">@rg.fileRef</span></td>
+                                <td><span class="underline">@rg.status</span></td>
+                                <td style="width:7%">
+                                    <a data-id="@rg.tdoRegisterID" onclick="javascript: ld_fm_with_id('@rg.tdoRegisterID', '/Modules/Dispatch', 'pageContent');" class="btn btn-metro btn-info btn-xs">
+                                        <i class="fa fa-pencil"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+        <div class="modal-footer">
+            <br />
+            <br />
+        </div>
+    </div>
+}
+
+<script>
+    styleTable('tbl');
+</script>
+
+
+
+

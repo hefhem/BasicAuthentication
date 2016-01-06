@@ -1,0 +1,290 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="tdoModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <Function Name="uspAddEditAccessLevels" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="accessLevelID" Type="int" Mode="In" />
+    <Parameter Name="userGroupID" Type="int" Mode="In" />
+    <Parameter Name="formID" Type="int" Mode="In" />
+    <Parameter Name="canAdd" Type="bit" Mode="In" />
+    <Parameter Name="canView" Type="bit" Mode="In" />
+    <Parameter Name="canEdit" Type="bit" Mode="In" />
+    <Parameter Name="canDelete" Type="bit" Mode="In" />
+    <Parameter Name="canApprove" Type="bit" Mode="In" />
+    <Parameter Name="createdByID" Type="int" Mode="In" />
+    <Parameter Name="sessionID" Type="uniqueidentifier" Mode="In" />
+  </Function>
+  <Function Name="uspAddEditCargoType" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="cargoTypeID" Type="int" Mode="In" />
+    <Parameter Name="cargoTypeName" Type="varchar" Mode="In" />
+    <Parameter Name="createdByID" Type="int" Mode="In" />
+    <Parameter Name="sessionID" Type="uniqueidentifier" Mode="In" />
+  </Function>
+  <Function Name="uspAddEditCity" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="cityID" Type="int" Mode="In" />
+    <Parameter Name="cityName" Type="varchar" Mode="In" />
+    <Parameter Name="cityCode" Type="varchar" Mode="In" />
+    <Parameter Name="stateID" Type="int" Mode="In" />
+    <Parameter Name="createdByID" Type="int" Mode="In" />
+    <Parameter Name="sessionID" Type="uniqueidentifier" Mode="In" />
+  </Function>
+  <Function Name="uspAddEditDriver" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="driverID" Type="int" Mode="In" />
+    <Parameter Name="driverCode" Type="varchar" Mode="In" />
+    <Parameter Name="firstName" Type="varchar" Mode="In" />
+    <Parameter Name="middleName" Type="varchar" Mode="In" />
+    <Parameter Name="lastName" Type="varchar" Mode="In" />
+    <Parameter Name="createdByID" Type="int" Mode="In" />
+    <Parameter Name="sessionID" Type="uniqueidentifier" Mode="In" />
+  </Function>
+  <Function Name="uspAddEditForms" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="formID" Type="int" Mode="In" />
+    <Parameter Name="menuItemID" Type="int" Mode="In" />
+    <Parameter Name="formName" Type="varchar(max)" Mode="In" />
+    <Parameter Name="formDescription" Type="varchar(max)" Mode="In" />
+    <Parameter Name="createdByID" Type="int" Mode="In" />
+    <Parameter Name="sessionID" Type="uniqueidentifier" Mode="In" />
+  </Function>
+  <Function Name="uspAddEditLocation" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="locationID" Type="int" Mode="In" />
+    <Parameter Name="locationName" Type="varchar" Mode="In" />
+    <Parameter Name="regionID" Type="int" Mode="In" />
+    <Parameter Name="createdByID" Type="int" Mode="In" />
+    <Parameter Name="sessionID" Type="uniqueidentifier" Mode="In" />
+  </Function>
+  <Function Name="uspAddEditMenuIcons" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="menuIconID" Type="int" Mode="In" />
+    <Parameter Name="menuID" Type="int" Mode="In" />
+    <Parameter Name="menuIconName" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="uspAddEditMenuItems" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="menuItemID" Type="int" Mode="In" />
+    <Parameter Name="menuID" Type="int" Mode="In" />
+    <Parameter Name="menuItemName" Type="varchar(max)" Mode="In" />
+    <Parameter Name="menuItemDescription" Type="varchar(max)" Mode="In" />
+    <Parameter Name="menuItemRanking" Type="int" Mode="In" />
+    <Parameter Name="createdByID" Type="int" Mode="In" />
+    <Parameter Name="sessionID" Type="uniqueidentifier" Mode="In" />
+  </Function>
+  <Function Name="uspAddEditMenus" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="menuID" Type="int" Mode="In" />
+    <Parameter Name="menuName" Type="varchar(max)" Mode="In" />
+    <Parameter Name="menuDesc" Type="varchar(max)" Mode="In" />
+    <Parameter Name="createdByID" Type="int" Mode="In" />
+    <Parameter Name="menuRanking" Type="int" Mode="In" />
+    <Parameter Name="sessionID" Type="uniqueidentifier" Mode="In" />
+  </Function>
+  <Function Name="uspAddEditPort" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="portID" Type="int" Mode="In" />
+    <Parameter Name="portName" Type="varchar" Mode="In" />
+    <Parameter Name="locationID" Type="int" Mode="In" />
+    <Parameter Name="createdByID" Type="int" Mode="In" />
+    <Parameter Name="sessionID" Type="uniqueidentifier" Mode="In" />
+  </Function>
+  <Function Name="uspAddEditRegion" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="regionID" Type="int" Mode="In" />
+    <Parameter Name="regionName" Type="varchar" Mode="In" />
+    <Parameter Name="createdByID" Type="int" Mode="In" />
+    <Parameter Name="sessionID" Type="uniqueidentifier" Mode="In" />
+  </Function>
+  <Function Name="uspAddEditRegister" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="tdoRegisterID" Type="int" Mode="In" />
+    <Parameter Name="jobNumber" Type="varchar" Mode="In" />
+    <Parameter Name="dateReceived" Type="datetime" Mode="In" />
+    <Parameter Name="expiryDate" Type="datetime" Mode="In" />
+    <Parameter Name="status" Type="varchar" Mode="In" />
+    <Parameter Name="cargoTypeID" Type="int" Mode="In" />
+    <Parameter Name="fileRef" Type="varchar" Mode="In" />
+    <Parameter Name="destinationID" Type="int" Mode="In" />
+    <Parameter Name="terminalID" Type="int" Mode="In" />
+    <Parameter Name="containerNo" Type="varchar" Mode="In" />
+    <Parameter Name="returnTerminal" Type="int" Mode="In" />
+    <Parameter Name="truckID" Type="int" Mode="In" />
+    <Parameter Name="tdoReceiptDate" Type="datetime" Mode="In" />
+    <Parameter Name="schDelDate" Type="datetime" Mode="In" />
+    <Parameter Name="loadingTime" Type="datetime" Mode="In" />
+    <Parameter Name="dispatchTime" Type="datetime" Mode="In" />
+    <Parameter Name="remarks" Type="varchar" Mode="In" />
+    <Parameter Name="createdByID" Type="int" Mode="In" />
+    <Parameter Name="sessionID" Type="uniqueidentifier" Mode="In" />
+  </Function>
+  <Function Name="uspAddEditState" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="stateID" Type="int" Mode="In" />
+    <Parameter Name="stateName" Type="varchar" Mode="In" />
+    <Parameter Name="stateCode" Type="varchar" Mode="In" />
+    <Parameter Name="createdByID" Type="int" Mode="In" />
+    <Parameter Name="sessionID" Type="uniqueidentifier" Mode="In" />
+  </Function>
+  <Function Name="uspAddEditTerminal" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="terminalID" Type="int" Mode="In" />
+    <Parameter Name="terminalName" Type="varchar" Mode="In" />
+    <Parameter Name="portID" Type="int" Mode="In" />
+    <Parameter Name="createdByID" Type="int" Mode="In" />
+    <Parameter Name="sessionID" Type="uniqueidentifier" Mode="In" />
+  </Function>
+  <Function Name="uspAddEditTruck" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="truckID" Type="int" Mode="In" />
+    <Parameter Name="truckName" Type="varchar" Mode="In" />
+    <Parameter Name="regNumb" Type="varchar" Mode="In" />
+    <Parameter Name="truckTypeID" Type="int" Mode="In" />
+    <Parameter Name="createdByID" Type="int" Mode="In" />
+    <Parameter Name="sessionID" Type="uniqueidentifier" Mode="In" />
+  </Function>
+  <Function Name="uspAddEditTruckType" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="truckTypeID" Type="int" Mode="In" />
+    <Parameter Name="truckTypeName" Type="varchar" Mode="In" />
+    <Parameter Name="createdByID" Type="int" Mode="In" />
+    <Parameter Name="sessionID" Type="uniqueidentifier" Mode="In" />
+  </Function>
+  <Function Name="uspAddEditUserGroups" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="userGroupID" Type="int" Mode="In" />
+    <Parameter Name="groupName" Type="varchar(max)" Mode="In" />
+    <Parameter Name="description" Type="varchar(max)" Mode="In" />
+    <Parameter Name="createdByID" Type="int" Mode="In" />
+    <Parameter Name="sessionID" Type="uniqueidentifier" Mode="In" />
+  </Function>
+  <Function Name="uspAddEditUsers" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="userID" Type="int" Mode="In" />
+    <Parameter Name="userGroupID" Type="int" Mode="In" />
+    <Parameter Name="userName" Type="varchar(max)" Mode="In" />
+    <Parameter Name="password" Type="varchar(max)" Mode="In" />
+    <Parameter Name="salt" Type="varchar(max)" Mode="In" />
+    <Parameter Name="passwordCanExpire" Type="bit" Mode="In" />
+    <Parameter Name="passwordExpiryDate" Type="datetime" Mode="In" />
+    <Parameter Name="isLocked" Type="bit" Mode="In" />
+    <Parameter Name="loginAttempts" Type="int" Mode="In" />
+    <Parameter Name="lastLoginDate" Type="datetime" Mode="In" />
+    <Parameter Name="theme" Type="varchar(max)" Mode="In" />
+    <Parameter Name="resetPassword" Type="bit" Mode="In" />
+    <Parameter Name="createdByID" Type="int" Mode="In" />
+    <Parameter Name="sessionID" Type="uniqueidentifier" Mode="In" />
+  </Function>
+  <Function Name="uspAddEditUserSessionHistory" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="sessionID" Type="uniqueidentifier" Mode="In" />
+    <Parameter Name="userID" Type="int" Mode="In" />
+    <Parameter Name="logoutDate" Type="datetime" Mode="In" />
+    <Parameter Name="isActive" Type="bit" Mode="In" />
+    <Parameter Name="deviceType" Type="varchar" Mode="In" />
+    <Parameter Name="deviceName" Type="varchar" Mode="In" />
+    <Parameter Name="browser" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="uspAddEditUserSessions" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="sessionID" Type="uniqueidentifier" Mode="In" />
+    <Parameter Name="userID" Type="int" Mode="In" />
+    <Parameter Name="isActive" Type="bit" Mode="In" />
+    <Parameter Name="deviceType" Type="varchar" Mode="In" />
+    <Parameter Name="deviceName" Type="varchar" Mode="In" />
+    <Parameter Name="browser" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="uspChangePassword" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="userID" Type="int" Mode="In" />
+    <Parameter Name="oldPassword" Type="varchar(max)" Mode="In" />
+    <Parameter Name="newPassword" Type="varchar(max)" Mode="In" />
+  </Function>
+  <Function Name="uspDelAccessLevels" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="accesslevelID" Type="int" Mode="In" />
+  </Function>
+  <Function Name="uspDelCargoType" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="cargoTypeID" Type="int" Mode="In" />
+  </Function>
+  <Function Name="uspDelCity" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="cityID" Type="int" Mode="In" />
+  </Function>
+  <Function Name="uspDelDriver" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="driverID" Type="int" Mode="In" />
+  </Function>
+  <Function Name="uspDelForms" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="formID" Type="int" Mode="In" />
+  </Function>
+  <Function Name="uspDelLocation" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="locationID" Type="int" Mode="In" />
+  </Function>
+  <Function Name="uspDelMenuIcons" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="menuIconID" Type="int" Mode="In" />
+  </Function>
+  <Function Name="uspDelMenuItems" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="menuItemID" Type="int" Mode="In" />
+  </Function>
+  <Function Name="uspDelMenus" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="menuID" Type="int" Mode="In" />
+  </Function>
+  <Function Name="uspDelPort" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="portID" Type="int" Mode="In" />
+  </Function>
+  <Function Name="uspDelRegion" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="regionID" Type="int" Mode="In" />
+  </Function>
+  <Function Name="uspDelRegister" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="tdoRegisterID" Type="int" Mode="In" />
+  </Function>
+  <Function Name="uspDelState" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="stateID" Type="int" Mode="In" />
+  </Function>
+  <Function Name="uspDelTerminal" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="terminalID" Type="int" Mode="In" />
+  </Function>
+  <Function Name="uspDelTruck" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="truckID" Type="int" Mode="In" />
+  </Function>
+  <Function Name="uspDelTruckType" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="truckTypeID" Type="int" Mode="In" />
+  </Function>
+  <Function Name="uspDelUsergroup" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="userGroupID" Type="int" Mode="In" />
+  </Function>
+  <Function Name="uspDelUsers" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="userID" Type="int" Mode="In" />
+  </Function>
+  <Function Name="uspDelUserSession" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="sessionID" Type="uniqueidentifier" Mode="In" />
+    <Parameter Name="userID" Type="int" Mode="In" />
+  </Function>
+  <Function Name="uspGetAccessLevels" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="accessLevelID" Type="int" Mode="In" />
+    <Parameter Name="userGroupID" Type="int" Mode="In" />
+    <Parameter Name="formID" Type="int" Mode="In" />
+  </Function>
+  <Function Name="uspGetCargoType" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="cargoTypeID" Type="int" Mode="In" />
+  </Function>
+  <Function Name="uspGetCity" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="cityID" Type="int" Mode="In" />
+  </Function>
+  <Function Name="uspGetDriver" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="uspGetForms" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="formID" Type="int" Mode="In" />
+  </Function>
+  <Function Name="uspGetJobNumber" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="uspGetLocation" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="uspGetMenuIcons" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="menuIconID" Type="int" Mode="In" />
+  </Function>
+  <Function Name="uspGetMenuItems" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="menuItemID" Type="int" Mode="In" />
+  </Function>
+  <Function Name="uspGetMenus" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="menuID" Type="int" Mode="In" />
+  </Function>
+  <Function Name="uspGetPort" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="uspGetRegion" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="uspGetRegister" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="tdoRegisterID" Type="int" Mode="In" />
+  </Function>
+  <Function Name="uspGetState" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="uspGetTerminal" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="uspGetTruck" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="uspGetTruckType" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="uspGetUserDisplay" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="userID" Type="int" Mode="In" />
+  </Function>
+  <Function Name="uspGetUserGroups" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="uspGetUsers" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="uspGetUserSessionHistory" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="uspGetUserSessions" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="uspUserAuthentication" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="userName" Type="varchar" Mode="In" />
+    <Parameter Name="password" Type="varchar(max)" Mode="In" />
+    <Parameter Name="deviceType" Type="varchar(max)" Mode="In" />
+    <Parameter Name="deviceName" Type="varchar(max)" Mode="In" />
+    <Parameter Name="browser" Type="varchar(max)" Mode="In" />
+  </Function>
+  <EntityContainer Name="tdoModelStoreContainer" />
+</Schema>

@@ -1,0 +1,125 @@
+﻿@using WebForTraining.Models;
+@using WebForTraining.Database;
+@{
+    var portID = int.Parse(Request.Params["id"]);
+    Layout = null;
+    var Port = Administration.getPort().Where(p => p.portID == portID);
+
+    var UserID = int.Parse(Session["UserID"].ToString());
+    List<ClsUserDisplay> userDisplay = new List<ClsUserDisplay>();
+    using (tdoEntities db = new tdoEntities())
+    {
+        userDisplay = db.uspGetUserDisplay(UserID).ToList<ClsUserDisplay>();
+    }
+    List<string> editableForms = Restriction.GetEditableForms(userDisplay);
+    List<string> addableForms = Restriction.GetAddableForms(userDisplay);
+
+}
+
+@if (portID == 0 && !addableForms.Contains("Port"))
+{
+    <div class="alert alert-warning">You are not allowed to add new record.</div>
+    return;
+}
+else if (portID != 0 && !editableForms.Contains("Port"))
+{
+    <div class="alert alert-warning">You are not allowed to edit record.</div>
+    return;
+}
+
+@if (portID == 0)
+{
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">×</span>
+            </button>
+            <h4 class="modal-title" id="myModalLabel2">Add/Edit Port</h4>
+        </div>
+        <form method="post" id="addPortForm" class="form-horizontal form-label-left">
+            <div class="modal-body ">
+
+                <div class="form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="portName">
+                        Port Name <span class="required">*</span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input type="text" id="portName" name="portName" data-validation="required" class="form-control col-md-7 col-xs-12">
+                        <input type="hidden" id="portID" name="portID" value="0">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="locationID">
+                        Location <span class="required">*</span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <select class="form-control col-md-7 col-xs-12" id="locationID" name="locationID" data-validation="required">
+                            <option value="">Select Location</option>
+                            @foreach (var loc in Administration.getLocation())
+                            {
+                                <option value="@loc.locationID">@loc.locationName</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <br />
+
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-success" onclick="javascript: validate_form('addPortForm', '/Administration/setPort');">Save</button>
+            </div>
+        </form>
+    </div>
+}
+else
+{
+    foreach (var por in Port)
+    {
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel2">Add/Edit Port</h4>
+            </div>
+            <form method="post" id="addPortForm" class="form-horizontal form-label-left">
+                <div class="modal-body ">
+
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="portName">
+                            Port Name <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="text" id="portName" name="portName" data-validation="required" class="form-control col-md-7 col-xs-12" value="@por.portName">
+                            <input type="hidden" id="portID" name="portID" value="@por.portID">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="locationID">
+                            Location <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <select class="form-control col-md-7 col-xs-12" id="locationID" name="locationID" data-validation="required">
+                                <option value="">Select Location</option>
+                                @foreach (var loc in Administration.getLocation())
+                                {
+                                    <option value="@loc.locationID" @(loc.locationID == por.locationID ? "selected" : "")>@loc.locationName</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+                    <br />
+
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" onclick="javascript: validate_form('addPortForm', '/Administration/setPort');">Update</button>
+                </div>
+            </form>
+        </div>
+    }
+}
+

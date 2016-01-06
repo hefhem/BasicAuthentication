@@ -1,0 +1,71 @@
+﻿@using WebForTraining.Models;
+@using WebForTraining.Database;
+@{
+    //var employeeID = Request.Params["employeeID"];
+    //var token = Session["Token"].ToString();
+    Layout = null;
+    //List<string> AuthForms = (List<string>)Session["Forms"];
+    var Forms = Administration.getForms(0);
+    var UserID = int.Parse(Session["UserID"].ToString());
+    List<ClsUserDisplay> userDisplay = new List<ClsUserDisplay>();
+    using (tdoEntities db = new tdoEntities())
+    {
+        userDisplay = db.uspGetUserDisplay(UserID).ToList<ClsUserDisplay>();
+    }
+    List<string> viewableForms = Restriction.GetViewableForms(userDisplay);
+}
+
+@if (!viewableForms.Contains("Forms"))
+{
+    <div class="alert alert-warning">You do not have permision to view records.</div>
+    return;
+}
+@if (Forms != null)
+{
+    <div class="table-resposive">
+        <table class="table table-striped responsive-utilities jambo_table dataTable" id="tblForms">
+            <thead>
+                <tr>
+                    <th><input type="checkbox" class="selForms" onclick="checkAll(this, 'selForms');" /></th>
+                    <th><strong>Form Name</strong></th>
+                    <th><strong>Description</strong></th>
+                    <th><strong>Menu Item</strong></th>
+                    <th><strong></strong></th>
+                </tr>
+            </thead>
+            <tbody id="tblForms">
+                @foreach (var fm in Forms)
+                {
+                    <tr>
+                        <td><input type="checkbox" value="@fm.formID" class="selForms" /></td>
+                        <td><span class="underline">@fm.formName</span></td>
+                        <td>@fm.formDescription</td>
+                        <td>@fm.menuItemName</td>
+                        <td>
+                            <a data-id="@fm.formID" onclick="javascript: ld_modal_fm('/Administration/AddEditForms', 'modalContentLoad', '@fm.formID');" class="btn btn-metro btn-info btn-xs">
+                                <i class="fa fa-pencil"></i>
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <div class="alert alert-warning">No record to display</div>
+}
+
+<script>
+    styleTable('tblForms');
+</script>
+
+
+
+
+
+
+
+
+

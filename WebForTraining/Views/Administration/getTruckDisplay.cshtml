@@ -1,0 +1,69 @@
+﻿@using WebForTraining.Models;
+@using WebForTraining.Database;
+@{
+
+    Layout = null;
+    var Truck = Administration.getTruck();
+
+    var UserID = int.Parse(Session["UserID"].ToString());
+    List<ClsUserDisplay> userDisplay = new List<ClsUserDisplay>();
+    using (tdoEntities db = new tdoEntities())
+    {
+        userDisplay = db.uspGetUserDisplay(UserID).ToList<ClsUserDisplay>();
+    }
+    List<string> viewableForms = Restriction.GetViewableForms(userDisplay);
+}
+
+@if (!viewableForms.Contains("Truck"))
+{
+    <div class="alert alert-warning">You do not have permision to view records.</div>
+    return;
+}
+
+@if (Truck != null)
+{
+
+    <div class="table-resposive">
+
+    <table class="table table-striped responsive-utilities jambo_table dataTables" id="tblTruck">
+        <thead>
+            <tr>
+                <th style="width:7%"><input type="checkbox" class="selTruck" onclick="checkAll(this, 'selTruck');" /></th>
+                <th>Truck Name</th>
+                <th>Registration Number</th>
+				<th>Truck Type</th>
+                <th>Edit</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var tru in Truck)
+            {
+                <tr>
+                    <td style="width:7%"><input type="checkbox" value="@tru.truckID" class="selTruck" /></td>
+                    <td><span class="underline">@tru.truckName</span></td>
+                    <td><span class="underline">@tru.regNumb</span></td>
+                    <td><span class="underline">@tru.truckTypeName</span></td>
+                    <td style="width:7%">
+                        <a data-id="@tru.truckID" onclick="javascript: ld_modal_fm('/Administration/AddEditTruck', 'modalContentLoad', '@tru.truckID');" class="btn btn-metro btn-info btn-xs">
+                            <i class="fa fa-pencil"></i>
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    </div>
+
+}
+else
+{
+    <div class="alert alert-warning">No record to display</div>
+}
+
+<script>
+    styleTable('tblTruck');
+</script>
+
+
+

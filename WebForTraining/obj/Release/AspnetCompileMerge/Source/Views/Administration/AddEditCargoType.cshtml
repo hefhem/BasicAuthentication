@@ -1,0 +1,94 @@
+﻿@using WebForTraining.Models;
+@using WebForTraining.Database;
+@{
+    var cargoTypeID = int.Parse(Request.Params["id"]);
+    Layout = null;
+    var CargoType = Administration.getCargoType().Where(p => p.cargoTypeID == cargoTypeID);
+
+    var UserID = int.Parse(Session["UserID"].ToString());
+    List<ClsUserDisplay> userDisplay = new List<ClsUserDisplay>();
+    using (tdoEntities db = new tdoEntities())
+    {
+        userDisplay = db.uspGetUserDisplay(UserID).ToList<ClsUserDisplay>();
+    }
+    List<string> editableForms = Restriction.GetEditableForms(userDisplay);
+    List<string> addableForms = Restriction.GetAddableForms(userDisplay);
+    
+}
+
+@if (cargoTypeID == 0 && !addableForms.Contains("CargoType"))
+{
+    <div class="alert alert-warning">You are not allowed to add new record.</div>
+    return;
+}
+else if (cargoTypeID != 0 && !editableForms.Contains("CargoType"))
+{
+    <div class="alert alert-warning">You are not allowed to edit record.</div>
+    return;
+}
+
+@if (cargoTypeID == 0)
+{
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">×</span>
+            </button>
+            <h4 class="modal-title" id="myModalLabel2">Add/Edit Cargo Type</h4>
+        </div>
+        <form method="post" id="addCargoTypeForm" class="form-horizontal form-label-left">
+            <div class="modal-body ">
+
+                <div class="form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="cargoTypeName">
+                        Cargo Type <span class="required">*</span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input type="text" id="cargoTypeName" name="cargoTypeName" data-validation="required" class="form-control col-md-7 col-xs-12">
+                        <input type="hidden" id="cargoTypeID" name="cargoTypeID" value="0">
+                    </div>
+                </div>
+
+                <br />
+
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-success" onclick="javascript: validate_form('addCargoTypeForm', '/Administration/setCargoType');">Save</button>
+            </div>
+        </form>
+    </div>
+}
+else
+{
+    foreach (var cgt in CargoType) {
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">×</span>
+            </button>
+            <h4 class="modal-title" id="myModalLabel2">Add/Edit Cargo Type</h4>
+        </div>
+        <form method="post" id="addCargoTypeForm" class="form-horizontal form-label-left">
+            <div class="modal-body ">
+
+                <div class="form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="cargoType">
+                        Cargo Type <span class="required">*</span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input type="text" id="cargoTypeName" name="cargoTypeName" data-validation="required" class="form-control col-md-7 col-xs-12" value="@cgt.cargoTypeName">
+                        <input type="hidden" id="cargoTypeID" name="cargoTypeID" value="@cgt.cargoTypeID">
+                    </div>
+                </div>
+
+                <br />
+
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary" onclick="javascript: validate_form('addCargoTypeForm', '/Administration/setCargoType');">Update</button>
+            </div>
+        </form>
+    </div>
+    }
+}
+

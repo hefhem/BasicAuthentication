@@ -1,0 +1,106 @@
+﻿@using WebForTraining.Models;
+@using WebForTraining.Database;
+@{
+    var usrGroupID = int.Parse(Request.Params["id"]);
+    //var token = Session["Token"].ToString();
+    Layout = null;
+    //List<string> AuthForms = (List<string>)Session["Forms"];
+   
+    var UserGroup = Administration.getUsersGroup().Where(p => p.userGroupID == usrGroupID);
+    var UserID = int.Parse(Session["UserID"].ToString());
+    List<ClsUserDisplay> userDisplay = new List<ClsUserDisplay>();
+    using (tdoEntities db = new tdoEntities())
+    {
+        userDisplay = db.uspGetUserDisplay(UserID).ToList<ClsUserDisplay>();
+    }
+    List<string> editableForms = Restriction.GetEditableForms(userDisplay);
+    List<string> addableForms = Restriction.GetAddableForms(userDisplay);
+}
+
+@if (usrGroupID == 0 && !addableForms.Contains("UsersGroup"))
+{
+    <div class="alert alert-warning">You are not allowed to add new record.</div>
+    return;
+}
+else if (usrGroupID != 0 && !editableForms.Contains("UsersGroup"))
+{
+    <div class="alert alert-warning">You are not allowed to edit record.</div>
+    return;
+}
+
+@if (usrGroupID == 0) {
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">×</span>
+            </button>
+            <h4 class="modal-title" id="myModalLabel2">Add/Edit User Group</h4>
+        </div>
+        <form method="post" id="addUserGroupForm" class="form-horizontal form-label-left">
+            <div class="modal-body ">
+                <div class="form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="groupName">
+                        Group Name <span class="required">*</span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input type="text" id="groupName" name="groupName" data-validation="required" class="form-control col-md-7 col-xs-12">
+                        <input type="hidden" id="userGroupID" name="userGroupID" value="0">
+                    </div>
+                </div>
+                <br />
+                <div class="form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="description">
+                        Description <span class="required">*</span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input type="text" id="description" name="description" data-validation="required" class="form-control col-md-7 col-xs-12">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                @*<button type="submit" class="btn btn-primary" data-dismiss="modal">Close</button>*@
+                <button type="submit" class="btn btn-success" onclick="javascript: validate_form('addUserGroupForm', '/Administration/setUsersGroup');">Save</button>
+            </div>
+        </form>
+    </div>
+}
+else
+{
+    foreach (var grp in UserGroup) {
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">×</span>
+            </button>
+            <h4 class="modal-title" id="myModalLabel2">Add/Edit User Group</h4>
+        </div>
+        <form method="post" id="addUserGroupForm" class="form-horizontal form-label-left">
+            <div class="modal-body ">
+                <div class="form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="groupName">
+                        Group Name <span class="required">*</span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input type="text" id="groupName" name="groupName" data-validation="required" class="form-control col-md-7 col-xs-12" value="@grp.groupName">
+                        <input type="hidden" id="userGroupID" name="userGroupID" value="@grp.userGroupID">
+                    </div>
+                </div>
+                <br />
+                <div class="form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="description">
+                        Description <span class="required">*</span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input type="text" id="description" name="description" data-validation="required" class="form-control col-md-7 col-xs-12" value="@grp.description">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                @*<button type="submit" class="btn btn-primary" data-dismiss="modal">Close</button>*@
+                <button type="submit" class="btn btn-primary" onclick="javascript: validate_form('addUserGroupForm', '/Administration/setUsersGroup');">Update</button>
+            </div>
+        </form>
+    </div>
+    }
+}
+

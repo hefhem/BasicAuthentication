@@ -1,0 +1,275 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="tdoModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityContainer Name="tdoEntities" annotation:LazyLoadingEnabled="true">
+    <FunctionImport Name="uspAddEditUsers" ReturnType="Collection(tdoModel.ClsReturnValues)">
+      <Parameter Name="userID" Mode="In" Type="Int32" />
+      <Parameter Name="userGroupID" Mode="In" Type="Int32" />
+      <Parameter Name="userName" Mode="In" Type="String" />
+      <Parameter Name="password" Mode="In" Type="String" />
+      <Parameter Name="salt" Mode="In" Type="String" />
+      <Parameter Name="passwordCanExpire" Mode="In" Type="Boolean" />
+      <Parameter Name="passwordExpiryDate" Mode="In" Type="DateTime" />
+      <Parameter Name="isLocked" Mode="In" Type="Boolean" />
+      <Parameter Name="loginAttempts" Mode="In" Type="Int32" />
+      <Parameter Name="lastLoginDate" Mode="In" Type="DateTime" />
+      <Parameter Name="theme" Mode="In" Type="String" />
+      <Parameter Name="resetPassword" Mode="In" Type="Boolean" />
+      <Parameter Name="createdByID" Mode="In" Type="Int32" />
+      <Parameter Name="sessionID" Mode="In" Type="Guid" />
+    </FunctionImport>
+    <FunctionImport Name="uspAddEditUserSessionHistory" ReturnType="Collection(tdoModel.ClsReturnValues)">
+      <Parameter Name="sessionID" Mode="In" Type="Guid" />
+      <Parameter Name="userID" Mode="In" Type="Int32" />
+      <Parameter Name="logoutDate" Mode="In" Type="DateTime" />
+      <Parameter Name="isActive" Mode="In" Type="Boolean" />
+      <Parameter Name="deviceType" Mode="In" Type="String" />
+      <Parameter Name="deviceName" Mode="In" Type="String" />
+      <Parameter Name="browser" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="uspAddEditUserSessions" ReturnType="Collection(tdoModel.ClsReturnValues)">
+      <Parameter Name="sessionID" Mode="In" Type="Guid" />
+      <Parameter Name="userID" Mode="In" Type="Int32" />
+      <Parameter Name="isActive" Mode="In" Type="Boolean" />
+      <Parameter Name="deviceType" Mode="In" Type="String" />
+      <Parameter Name="deviceName" Mode="In" Type="String" />
+      <Parameter Name="browser" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="uspDelUserSession" ReturnType="Collection(tdoModel.ClsReturnValues)">
+      <Parameter Name="sessionID" Mode="In" Type="Guid" />
+      <Parameter Name="userID" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="uspGetUsers" ReturnType="Collection(tdoModel.ClsUsers)" />
+    <FunctionImport Name="uspGetUserSessionHistory" ReturnType="Collection(tdoModel.ClsUserSessionHistory)" />
+    <FunctionImport Name="uspGetUserSessions" ReturnType="Collection(tdoModel.ClsUserSessions)" />
+    <FunctionImport Name="uspUserAuthentication" ReturnType="Collection(tdoModel.ClsReturnValues)">
+      <Parameter Name="userName" Mode="In" Type="String" />
+      <Parameter Name="password" Mode="In" Type="String" />
+      <Parameter Name="deviceType" Mode="In" Type="String" />
+      <Parameter Name="deviceName" Mode="In" Type="String" />
+      <Parameter Name="browser" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="uspGetUserGroups" ReturnType="Collection(tdoModel.ClsUserGroups)" />
+    <FunctionImport Name="uspGetUserDisplay" ReturnType="Collection(tdoModel.ClsUserDisplay)">
+      <Parameter Name="userID" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="uspAddEditUserGroups" ReturnType="Collection(tdoModel.ClsReturnValues)">
+      <Parameter Name="userGroupID" Mode="In" Type="Int32" />
+      <Parameter Name="groupName" Mode="In" Type="String" />
+      <Parameter Name="description" Mode="In" Type="String" />
+      <Parameter Name="createdByID" Mode="In" Type="Int32" />
+      <Parameter Name="sessionID" Mode="In" Type="Guid" />
+    </FunctionImport>
+    <FunctionImport Name="uspDelUsergroup" ReturnType="Collection(tdoModel.ClsReturnValues)">
+      <Parameter Name="userGroupID" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="uspDelUsers" ReturnType="Collection(tdoModel.ClsReturnValues)">
+      <Parameter Name="userID" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="uspChangePassword" ReturnType="Collection(tdoModel.ClsReturnValues)">
+      <Parameter Name="userID" Mode="In" Type="Int32" />
+      <Parameter Name="oldPassword" Mode="In" Type="String" />
+      <Parameter Name="newPassword" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="uspAddEditAccessLevels" ReturnType="Collection(tdoModel.ClsReturnValues)">
+      <Parameter Name="accessLevelID" Mode="In" Type="Int32" />
+      <Parameter Name="userGroupID" Mode="In" Type="Int32" />
+      <Parameter Name="formID" Mode="In" Type="Int32" />
+      <Parameter Name="canAdd" Mode="In" Type="Boolean" />
+      <Parameter Name="canView" Mode="In" Type="Boolean" />
+      <Parameter Name="canEdit" Mode="In" Type="Boolean" />
+      <Parameter Name="canDelete" Mode="In" Type="Boolean" />
+      <Parameter Name="canApprove" Mode="In" Type="Boolean" />
+      <Parameter Name="createdByID" Mode="In" Type="Int32" />
+      <Parameter Name="sessionID" Mode="In" Type="Guid" />
+    </FunctionImport>
+    <FunctionImport Name="uspDelAccessLevels" ReturnType="Collection(tdoModel.ClsReturnValues)">
+      <Parameter Name="accesslevelID" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="uspGetAccessLevels" ReturnType="Collection(tdoModel.ClsAccessLevels)">
+      <Parameter Name="accessLevelID" Mode="In" Type="Int32" />
+      <Parameter Name="userGroupID" Mode="In" Type="Int32" />
+      <Parameter Name="formID" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="uspAddEditForms" ReturnType="Collection(tdoModel.ClsReturnValues)">
+      <Parameter Name="formID" Mode="In" Type="Int32" />
+      <Parameter Name="menuItemID" Mode="In" Type="Int32" />
+      <Parameter Name="formName" Mode="In" Type="String" />
+      <Parameter Name="formDescription" Mode="In" Type="String" />
+      <Parameter Name="createdByID" Mode="In" Type="Int32" />
+      <Parameter Name="sessionID" Mode="In" Type="Guid" />
+    </FunctionImport>
+    <FunctionImport Name="uspAddEditMenuItems" ReturnType="Collection(tdoModel.ClsReturnValues)">
+      <Parameter Name="menuItemID" Mode="In" Type="Int32" />
+      <Parameter Name="menuID" Mode="In" Type="Int32" />
+      <Parameter Name="menuItemName" Mode="In" Type="String" />
+      <Parameter Name="menuItemDescription" Mode="In" Type="String" />
+      <Parameter Name="menuItemRanking" Mode="In" Type="Int32" />
+      <Parameter Name="createdByID" Mode="In" Type="Int32" />
+      <Parameter Name="sessionID" Mode="In" Type="Guid" />
+    </FunctionImport>
+    <FunctionImport Name="uspAddEditMenus" ReturnType="Collection(tdoModel.ClsReturnValues)">
+      <Parameter Name="menuID" Mode="In" Type="Int32" />
+      <Parameter Name="menuName" Mode="In" Type="String" />
+      <Parameter Name="menuDesc" Mode="In" Type="String" />
+      <Parameter Name="createdByID" Mode="In" Type="Int32" />
+      <Parameter Name="menuRanking" Mode="In" Type="Int32" />
+      <Parameter Name="sessionID" Mode="In" Type="Guid" />
+    </FunctionImport>
+    <FunctionImport Name="uspDelForms" ReturnType="Collection(tdoModel.ClsReturnValues)">
+      <Parameter Name="formID" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="uspDelMenuItems" ReturnType="Collection(tdoModel.ClsReturnValues)">
+      <Parameter Name="menuItemID" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="uspDelMenus" ReturnType="Collection(tdoModel.ClsReturnValues)">
+      <Parameter Name="menuID" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="uspGetForms" ReturnType="Collection(tdoModel.ClsForms)">
+      <Parameter Name="formID" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="uspGetMenuItems" ReturnType="Collection(tdoModel.ClsMenuItems)">
+      <Parameter Name="menuItemID" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="uspGetMenus" ReturnType="Collection(tdoModel.ClsMenus)">
+      <Parameter Name="menuID" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="uspAddEditMenuIcons" ReturnType="Collection(tdoModel.ClsReturnValues)">
+      <Parameter Name="menuIconID" Mode="In" Type="Int32" />
+      <Parameter Name="menuID" Mode="In" Type="Int32" />
+      <Parameter Name="menuIconName" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="uspDelMenuIcons" ReturnType="Collection(tdoModel.ClsReturnValues)">
+      <Parameter Name="menuIconID" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="uspGetMenuIcons" ReturnType="Collection(tdoModel.ClsMenuIcons)">
+      <Parameter Name="menuIconID" Mode="In" Type="Int32" />
+    </FunctionImport>
+  </EntityContainer>
+  <ComplexType Name="ClsReturnValues">
+    <Property Type="Int32" Name="ID" Nullable="true" />
+    <Property Type="Boolean" Name="IsSuccess" Nullable="true" />
+    <Property Type="String" Name="Response" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="ClsUsers">
+    <Property Type="Int32" Name="userID" Nullable="false" />
+    <Property Type="Int32" Name="userGroupID" Nullable="false" />
+    <Property Type="String" Name="groupName" Nullable="false" MaxLength="50" />
+    <Property Type="String" Name="userName" Nullable="false" MaxLength="255" />
+    <Property Type="String" Name="password" Nullable="false" />
+    <Property Type="Boolean" Name="passwordCanExpire" Nullable="false" />
+    <Property Type="DateTime" Name="passwordExpiryDate" Nullable="true" />
+    <Property Type="Boolean" Name="isLocked" Nullable="false" />
+    <Property Type="Int32" Name="loginAttempts" Nullable="false" />
+    <Property Type="DateTime" Name="lastLoginDate" Nullable="true" Precision="23" />
+    <Property Type="String" Name="theme" Nullable="false" MaxLength="100" />
+    <Property Type="Boolean" Name="resetPassword" Nullable="false" />
+    <Property Type="DateTime" Name="dateCreated" Nullable="false" Precision="23" />
+    <Property Type="Int32" Name="createdByID" Nullable="true" />
+    <Property Type="Guid" Name="sessionID" Nullable="false" />
+  </ComplexType>
+  <ComplexType Name="ClsUserSessionHistory">
+    <Property Type="Guid" Name="sessionID" Nullable="false" />
+    <Property Type="Int32" Name="userID" Nullable="true" />
+    <Property Type="DateTime" Name="loginDate" Nullable="false" Precision="23" />
+    <Property Type="DateTime" Name="logoutDate" Nullable="true" Precision="23" />
+    <Property Type="Boolean" Name="isActive" Nullable="false" />
+    <Property Type="String" Name="deviceType" Nullable="false" MaxLength="255" />
+    <Property Type="String" Name="deviceName" Nullable="false" MaxLength="255" />
+    <Property Type="String" Name="browser" Nullable="true" />
+    <Property Type="String" Name="userName" Nullable="false" MaxLength="255" />
+  </ComplexType>
+  <ComplexType Name="ClsUserSessions">
+    <Property Type="Guid" Name="sessionID" Nullable="false" />
+    <Property Type="Int32" Name="userID" Nullable="true" />
+    <Property Type="DateTime" Name="loginDate" Nullable="false" Precision="23" />
+    <Property Type="DateTime" Name="logoutDate" Nullable="false" Precision="23" />
+    <Property Type="Boolean" Name="isActive" Nullable="false" />
+    <Property Type="String" Name="deviceType" Nullable="false" MaxLength="255" />
+    <Property Type="String" Name="deviceName" Nullable="false" MaxLength="255" />
+    <Property Type="String" Name="browser" Nullable="true" MaxLength="100" />
+    <Property Type="String" Name="userName" Nullable="false" MaxLength="255" />
+  </ComplexType>
+  <ComplexType Name="ClsUserGroups">
+    <Property Type="Int32" Name="userGroupID" Nullable="false" />
+    <Property Type="String" Name="groupName" Nullable="false" MaxLength="50" />
+    <Property Type="String" Name="description" Nullable="false" />
+    <Property Type="DateTime" Name="dateCreated" Nullable="false" Precision="23" />
+    <Property Type="Int32" Name="createdByID" Nullable="true" />
+    <Property Type="String" Name="createdByName" Nullable="false" MaxLength="255" />
+    <Property Type="Guid" Name="sessionID" Nullable="false" />
+  </ComplexType>
+  <ComplexType Name="ClsUserDisplay">
+    <Property Type="Int32" Name="userID" Nullable="false" />
+    <Property Type="Int32" Name="accessLevelID" Nullable="false" />
+    <Property Type="Int32" Name="userGroupID" Nullable="false" />
+    <Property Type="String" Name="groupName" Nullable="true" MaxLength="50" />
+    <Property Type="Int32" Name="formID" Nullable="false" />
+    <Property Type="String" Name="formName" Nullable="true" MaxLength="50" />
+    <Property Type="Int32" Name="menuItemID" Nullable="false" />
+    <Property Type="String" Name="menuItemName" Nullable="true" MaxLength="50" />
+    <Property Type="Int32" Name="menuID" Nullable="false" />
+    <Property Type="String" Name="menuName" Nullable="false" MaxLength="50" />
+    <Property Type="String" Name="menuIconName" Nullable="false" MaxLength="50" />
+    <Property Type="Boolean" Name="canAdd" Nullable="false" />
+    <Property Type="Boolean" Name="canView" Nullable="false" />
+    <Property Type="Boolean" Name="canEdit" Nullable="false" />
+    <Property Type="Boolean" Name="canDelete" Nullable="false" />
+    <Property Type="Boolean" Name="canApprove" Nullable="false" />
+  </ComplexType>
+  <ComplexType Name="ClsAccessLevels">
+    <Property Type="Int32" Name="accessLevelID" Nullable="false" />
+    <Property Type="Int32" Name="userGroupID" Nullable="true" />
+    <Property Type="String" Name="menuName" Nullable="true" MaxLength="255" />
+    <Property Type="String" Name="menuItemName" Nullable="true" MaxLength="255" />
+    <Property Type="Int32" Name="formID" Nullable="true" />
+    <Property Type="Boolean" Name="canAdd" Nullable="true" />
+    <Property Type="Boolean" Name="canView" Nullable="true" />
+    <Property Type="Boolean" Name="canEdit" Nullable="true" />
+    <Property Type="Boolean" Name="canDelete" Nullable="true" />
+    <Property Type="Boolean" Name="canApprove" Nullable="true" />
+    <Property Type="DateTime" Name="dateCreated" Nullable="true" Precision="23" />
+    <Property Type="Int32" Name="createdByID" Nullable="true" />
+    <Property Type="String" Name="formName" Nullable="true" MaxLength="255" />
+    <Property Type="String" Name="createdByName" Nullable="false" MaxLength="255" />
+    <Property Type="String" Name="groupName" Nullable="false" MaxLength="50" />
+    <Property Type="Guid" Name="sessionID" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="ClsForms">
+    <Property Type="Int32" Name="formID" Nullable="false" />
+    <Property Type="Int32" Name="menuItemID" Nullable="true" />
+    <Property Type="String" Name="formName" Nullable="true" MaxLength="255" />
+    <Property Type="String" Name="menuItemName" Nullable="true" MaxLength="255" />
+    <Property Type="String" Name="formDescription" Nullable="true" MaxLength="255" />
+    <Property Type="DateTime" Name="dateCreated" Nullable="true" Precision="23" />
+    <Property Type="Int32" Name="createdByID" Nullable="true" />
+    <Property Type="String" Name="username" Nullable="false" MaxLength="255" />
+    <Property Type="Guid" Name="sessionID" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="ClsMenuItems">
+    <Property Type="Int32" Name="menuItemID" Nullable="false" />
+    <Property Type="Int32" Name="menuID" Nullable="true" />
+    <Property Type="String" Name="menuName" Nullable="true" MaxLength="255" />
+    <Property Type="String" Name="menuItemName" Nullable="true" MaxLength="255" />
+    <Property Type="String" Name="menuItemDescription" Nullable="true" MaxLength="255" />
+    <Property Type="DateTime" Name="dateCreated" Nullable="true" Precision="23" />
+    <Property Type="Int32" Name="createdByID" Nullable="true" />
+    <Property Type="String" Name="createdByName" Nullable="false" MaxLength="255" />
+    <Property Type="Guid" Name="sessionID" Nullable="true" />
+    <Property Type="Int32" Name="menuItemRanking" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="ClsMenus">
+    <Property Type="Int32" Name="menuID" Nullable="false" />
+    <Property Type="String" Name="menuName" Nullable="true" MaxLength="255" />
+    <Property Type="String" Name="menuDesc" Nullable="true" MaxLength="255" />
+    <Property Type="DateTime" Name="dateCreated" Nullable="true" Precision="23" />
+    <Property Type="Int32" Name="createdByID" Nullable="true" />
+    <Property Type="Int32" Name="menuRanking" Nullable="true" />
+    <Property Type="Guid" Name="sessionID" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="ClsMenuIcons">
+    <Property Type="Int32" Name="menuIconID" Nullable="false" />
+    <Property Type="Int32" Name="menuID" Nullable="false" />
+    <Property Type="String" Name="menuName" Nullable="true" MaxLength="255" />
+    <Property Type="String" Name="menuIconName" Nullable="false" MaxLength="255" />
+  </ComplexType>
+</Schema>

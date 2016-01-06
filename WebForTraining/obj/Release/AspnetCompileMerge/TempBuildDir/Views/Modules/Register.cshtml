@@ -1,0 +1,381 @@
+﻿@using WebForTraining.Models;
+@using WebForTraining.Database;
+@{
+    Layout = null;
+    var registerID = 0;
+    if (Request.Params["id"] != null)
+    {
+        registerID = int.Parse(Request.Params["id"]);
+    } 
+    
+    ClsJobNumber jn = Modules.getJobNumber();
+    var UserID = int.Parse(Session["UserID"].ToString());
+    var Register = Modules.getRegister(registerID);
+    List<ClsUserDisplay> userDisplay = new List<ClsUserDisplay>();
+    using (tdoEntities db = new tdoEntities())
+    {
+        userDisplay = db.uspGetUserDisplay(UserID).ToList<ClsUserDisplay>();
+    }
+    List<string> editableForms = Restriction.GetEditableForms(userDisplay);
+    List<string> addableForms = Restriction.GetAddableForms(userDisplay);
+}
+
+@if (registerID == 0 && !addableForms.Contains("Register"))
+{
+    <div class="alert alert-warning">You are not allowed to add new record.</div>
+    return;
+}
+else if (registerID != 0 && !editableForms.Contains("Register"))
+{
+    <div class="alert alert-warning">You are not allowed to edit record.</div>
+    return;
+}
+
+@if (registerID == 0) {
+<div class="col-md-12 col-sm-12 col-xs-12">
+    <form class="form-horizontal has-validation-callback" id="registerForm">
+        <div class="x_panel">
+            <div class="x_title">
+                <h2><i class="fa fa-bars"></i> Register </h2>
+                <div class="col-lg-12">
+                    <div class="form-group">
+                        <div class="" align="center">
+                            <button type="button" class="btn btn-primary" id="btnFindPort" data-toggle="modal" onclick="javascript: ld_modal_fm('/Modules/getRegisterDisplay', 'modalContentLoad', '0');" title="Click to search record"><i class=" fa fa-search"></i></button>
+                            @*<button class="btn btn-default" id="btnRefresh"><i class=" fa fa-refresh"></i></button>*@
+                            <button type="button" class="btn btn-primary" id="btnNewRegister" onclick="javascript: ld_fm_with_id('0', '/Modules/Register', 'pageContent');"><i class=" fa fa-plus" title="Click to add new record"></i></button>
+                            <button type="submit" class="btn btn-success" id="btnAddRegister" onclick="javascript: validate_Register_form('registerForm', '/Modules/setRegister');" title="Click to save record"><i class=" fa fa-save"></i></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                    
+                    <header class="panel-heading"></header>
+                   
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label for="jobNumber" class="col-sm-4 control-label">Job Number</label>
+                            <div class="col-sm-7">
+                                <input type="text" readonly="readonly" class="form-control" name="jobNumber" id="jobNumber" value="@jn.jobNumber">
+                                <input type="hidden" name="tdoRegisterID" id="tdoRegisterID" value="0">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="dateReceived" class="col-sm-4 control-label">Date Received</label>
+                            <div class="col-sm-7">
+                                <input type="text" data-validation="date" data-provide="datepicker" data-date-format="dd-mm-yyyy"
+                                       data-validation-format="dd-mm-yyyy" class="form-control"
+                                       name="dateReceived" id="dateReceived" placeholder="dd-mm-yyyy">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="fileRef" class="col-sm-4 control-label">File Ref.</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control" data-validation="required"
+                                       name="fileRef" id="fileRef" placeholder="File Reference">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="containerNo" class="col-sm-4 control-label">Container No.</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control" data-validation="required"
+                                       name="containerNo" id="containerNo" placeholder="Container No.">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="terminalID" class="col-sm-4 control-label">Terminal</label>
+                            <div class="col-sm-7">
+                                <select class="form-control" id="terminalID" name="terminalID" data-validation="required">
+                                    <option value="">Select a Terminal</option>
+                                    @foreach (var tm in Administration.getTerminal())
+                                {
+                                <option value="@tm.terminalID">@tm.terminalName</option>
+                                }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="truckID" class="col-sm-4 control-label">Truck</label>
+                            <div class="col-sm-7">
+                                <select class="form-control col-md-3 col-sm-3" id="truckID" name="truckID" data-validation="required">
+                                    <option value="">Select a Truck</option>
+                                    @foreach (var trk in Administration.getTruck())
+                                {
+                                <option value="@trk.truckID">@trk.truckName - @trk.regNumb</option>
+                                }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="schDelDate" class="col-sm-4 control-label">Sch. Delivery Date</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control" data-validation="date" data-provide="datepicker" data-date-format="dd-mm-yyyy"
+                                       data-validation-format="dd-mm-yyyy"
+                                       name="schDelDate" id="schDelDate" placeholder="dd-mm-yyyy">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="remarks" class="col-sm-4 control-label">Remarks</label>
+                            <div class="col-sm-7">
+                                <textarea class="form-control" name="remarks" id="remarks" placeholder="Remarks"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label for="status" class="col-sm-4 control-label">Status</label>
+                            <div class="col-sm-7">
+                                <select class="form-control" name="status" id="status">
+                                    <option value="Received">Received</option>
+                                    <option value="Cancelled">Cancelled</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="expiryDate" class="col-sm-4 control-label">Expiry Date</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control" data-validation="date" data-provide="datepicker"
+                                       data-date-format="dd-mm-yyyy" data-validation-format="dd-mm-yyyy"
+                                       name="expiryDate" id="expiryDate" placeholder="dd-mm-yyyy">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="tdoReceiptDate" class="col-sm-4 control-label">TDO Receipt</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control" data-validation="date" data-provide="datepicker" data-date-format="dd-mm-yyyy"
+                                       data-validation-format="dd-mm-yyyy"
+                                       name="tdoReceiptDate" id="tdoReceiptDate" placeholder="dd-mm-yyyy">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="cargoTypeID" class="col-sm-4 control-label">Cargo Type</label>
+                            <div class="col-sm-7">
+                                <select class="form-control col-md-3 col-sm-3" id="cargoTypeID" name="cargoTypeID" data-validation="required">
+                                    <option value="">Select a Cargo Type</option>
+                                    @foreach (var cg in Administration.getCargoType())
+                                {
+                                <option value="@cg.cargoTypeID">@cg.cargoTypeName</option>
+                                }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="stateID" class="col-sm-4 control-label"> Destination State</label>
+                            <div class="col-sm-7">
+                                <select class="form-control col-md-3 col-sm-3" id="stateID" name="stateID" data-validation="required" onchange="this.value && getDropDown(this.value, '/Administration/getCityDropDown', 'destinationID');">
+                                    <option value="">Select a State</option>
+                                    @foreach (var st in Administration.getState())
+                                {
+                                <option value="@st.stateID">@st.stateName</option>
+                                }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="destinationID" class="col-sm-4 control-label">Destination</label>
+                            <div class="col-sm-7">
+                                <select class="form-control" name="destinationID" id="destinationID" data-validation="required">
+                                    <option value="">Select State First</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="returnTerminal" class="col-sm-4 control-label">Return Terminal</label>
+                            <div class="col-sm-7">
+                                <select class="form-control col-md-3 col-sm-3" id="returnTerminal" name="returnTerminal" data-validation="required">
+                                    <option value="">Select a return terminal</option>
+                                    @foreach (var rt in Administration.getTerminal())
+                                {
+                                <option value="@rt.terminalID">@rt.terminalName</option>
+                                }
+                                </select>
+                            </div>
+                        </div>
+
+                    </div>
+            </div>
+        </div>
+    </form>
+</div>
+}
+else
+{
+    foreach (var rg in Register) { 
+<div class="col-md-12 col-sm-12 col-xs-12">
+    <form class="form-horizontal has-validation-callback" id="registerForm">
+        <div class="x_panel">
+            <div class="x_title">
+                <h2><i class="fa fa-bars"></i> Register </h2>
+                <div class="col-lg-12">
+                    <div class="form-group">
+                        <div class="" align="center">
+                            <button type="button" class="btn btn-primary" id="btnFindPort" data-toggle="modal" onclick="javascript: ld_modal_fm('/Modules/getRegisterDisplay', 'modalContentLoad', '0');" title="Click to search record"><i class=" fa fa-search"></i></button>
+                            <button type="button" class="btn btn-primary" id="btnNewRegister" onclick="javascript: ld_fm_with_id('0', '/Modules/Register', 'pageContent');"><i class=" fa fa-plus" title="Click to add new record"></i></button>
+                            @if (@rg.status != "Cancelled") { 
+                            <button type="submit" class="btn btn-success" id="btnAddRegister" onclick="javascript: validate_Register_form('registerForm', '/Modules/setRegister');"><i class=" fa fa-save" title="Click to save record"></i></button>
+    <button type="button" class="btn btn-danger" id="btnCancelRegister" onclick="javascript: del_dir_Record('@rg.tdoRegisterID', '/Modules/deleteRegister');" title="Click to cancel record"><i class=" fa fa-ban"></i></button>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                    
+                    <header class="panel-heading"></header>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label for="jobNumber" class="col-sm-4 control-label">Job Number</label>
+                            <div class="col-sm-7">
+                                <input type="text" readonly="readonly" class="form-control" name="jobNumber" id="jobNumber" value="@rg.jobNumber" >
+                                <input type="hidden" name="tdoRegisterID" id="tdoRegisterID" value="@rg.tdoRegisterID">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="dateReceived" class="col-sm-4 control-label">Date Received</label>
+                            <div class="col-sm-7">
+                                <input type="text" data-validation="date" data-provide="datepicker" data-date-format="dd-mm-yyyy"
+                                       data-validation-format="dd-mm-yyyy" class="form-control"
+                                       name="dateReceived" id="dateReceived" placeholder="dd-mm-yyyy" value="@(String.Format("{0:dd-MM-yyyy}", @rg.dateReceived))" @(rg.status == "Cancelled" ? "disabled" : "")>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="fileRef" class="col-sm-4 control-label">File Ref.</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control" data-validation="required"
+                                       name="fileRef" id="fileRef" placeholder="File Reference" value="@rg.fileRef" @(rg.status == "Cancelled" ? "disabled" : "")>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="containerNo" class="col-sm-4 control-label">Container No.</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control" data-validation="required"
+                                       name="containerNo" id="containerNo" placeholder="Container No." value="@rg.containerNo" @(rg.status == "Cancelled" ? "disabled" : "")>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="terminalID" class="col-sm-4 control-label">Terminal</label>
+                            <div class="col-sm-7">
+                                <select class="form-control" id="terminalID" name="terminalID" data-validation="required" @(rg.status == "Cancelled" ? "disabled" : "")>
+                                    <option value="">Select a Terminal</option>
+                                    @foreach (var tm in Administration.getTerminal())
+                                    {
+                                        <option value="@tm.terminalID" @(tm.terminalID == rg.terminalID ? "selected" : "")>@tm.terminalName</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="truckID" class="col-sm-4 control-label">Truck</label>
+                            <div class="col-sm-7">
+                                <select class="form-control col-md-3 col-sm-3" id="truckID" name="truckID" data-validation="required" @(rg.status == "Cancelled" ? "disabled" : "")>
+                                    <option value="">Select a Truck</option>
+                                    @foreach (var trk in Administration.getTruck())
+                                    {
+                                        <option value="@trk.truckID" @(trk.truckID == rg.truckID ? "selected" : "")>@trk.truckName - @trk.regNumb</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="schDelDate" class="col-sm-4 control-label">Sch. Delivery Date</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control" data-validation="date" data-provide="datepicker" data-date-format="dd-mm-yyyy"
+                                       data-validation-format="dd-mm-yyyy" @(rg.status == "Cancelled" ? "disabled" : "")
+                                       name="schDelDate" id="schDelDate" placeholder="dd-mm-yyyy" value="@(String.Format("{0:dd-MM-yyyy}", @rg.schDelDate))">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="remarks" class="col-sm-4 control-label">Remarks</label>
+                            <div class="col-sm-7">
+                                <textarea class="form-control" name="remarks" id="remarks" placeholder="Remarks" @(rg.status == "Cancelled" ? "disabled" : "")>@rg.remarks</textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label for="status" class="col-sm-4 control-label">Status</label>
+                            <div class="col-sm-7">
+                                <select class="form-control" name="status" id="status" @(rg.status == "Cancelled" ? "readonly" : "")>
+                                    <option value="Received" @(rg.status == "Received" ? "selected" : "")>Received</option>
+                                    <option value="Cancelled" @(rg.status == "Cancelled" ? "selected" : "")>Cancelled</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="expiryDate" class="col-sm-4 control-label">Expiry Date</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control" data-validation="date" data-provide="datepicker"
+                                       data-date-format="dd-mm-yyyy" data-validation-format="dd-mm-yyyy" @(rg.status == "Cancelled" ? "disabled" : "")
+                                       name="expiryDate" id="expiryDate" placeholder="dd-mm-yyyy" value="@(String.Format("{0:dd-MM-yyyy}", @rg.expiryDate))">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="tdoReceiptDate" class="col-sm-4 control-label">TDO Receipt</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control" data-validation="date" data-provide="datepicker" data-date-format="dd-mm-yyyy"
+                                       data-validation-format="dd-mm-yyyy" @(rg.status == "Cancelled" ? "readonly" : "")
+                                       name="tdoReceiptDate" id="tdoReceiptDate" placeholder="dd-mm-yyyy" value="@(String.Format("{0:dd-MM-yyyy}", @rg.tdoReceiptDate))">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="cargoTypeID" class="col-sm-4 control-label">Cargo Type</label>
+                            <div class="col-sm-7">
+                                <select class="form-control col-md-3 col-sm-3" id="cargoTypeID" name="cargoTypeID" data-validation="required" @(rg.status == "Cancelled" ? "disabled" : "")>
+                                    <option value="">Select a Cargo Type</option>
+                                    @foreach (var cg in Administration.getCargoType())
+                                    {
+                                        <option value="@cg.cargoTypeID" @(cg.cargoTypeID == rg.cargoTypeID ? "selected" : "")>@cg.cargoTypeName</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="stateID" class="col-sm-4 control-label"> Destination State</label>
+                            <div class="col-sm-7">
+                                <select class="form-control col-md-3 col-sm-3" id="stateID" name="stateID" data-validation="required"
+                                        onchange="this.value && getDropDown(this.value, '/Administration/getCityDropDown', 'destinationID');" @(rg.status == "Cancelled" ? "disabled" : "")>
+                                    <option value="">Select a State</option>
+                                    @foreach (var st in Administration.getState())
+                                    {
+                                        <option value="@st.stateID" @(st.stateID == rg.stateID ? "selected" : "")>@st.stateName</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="destinationID" class="col-sm-4 control-label">Destination</label>
+                            <div class="col-sm-7">
+                                <select class="form-control" name="destinationID" id="destinationID" data-validation="required" @(rg.status == "Cancelled" ? "disabled" : "")>
+                                    <option value="">Select State First</option>
+                                    @foreach (var ct in Administration.getCity().Where(p => p.stateID == @rg.stateID))
+                                    {
+                                        <option value="@ct.cityID" @(ct.cityID == rg.destinationID ? "selected" : "")>@ct.cityName</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="returnTerminal" class="col-sm-4 control-label">Return Terminal</label>
+                            <div class="col-sm-7">
+                                <select class="form-control col-md-3 col-sm-3" id="returnTerminal" name="returnTerminal" data-validation="required" @(rg.status == "Cancelled" ? "disabled" : "")>
+                                    <option value="">Select a return terminal</option>
+                                    @foreach (var rt in Administration.getTerminal())
+                                    {
+                                        <option value="@rt.terminalID" @(rt.terminalID == rg.returnTerminal ? "selected" : "")>@rt.terminalName</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+
+                    </div>
+            </div>
+        </div>
+    </form>
+</div>
+}
+}
+<script>
+        
+</script>

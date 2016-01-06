@@ -1,0 +1,67 @@
+﻿@using WebForTraining.Models;
+@using WebForTraining.Database;
+@{
+
+    Layout = null;
+    var State = Administration.getState();
+
+    var UserID = int.Parse(Session["UserID"].ToString());
+    List<ClsUserDisplay> userDisplay = new List<ClsUserDisplay>();
+    using (tdoEntities db = new tdoEntities())
+    {
+        userDisplay = db.uspGetUserDisplay(UserID).ToList<ClsUserDisplay>();
+    }
+    List<string> viewableForms = Restriction.GetViewableForms(userDisplay);
+}
+
+@if (!viewableForms.Contains("State"))
+{
+    <div class="alert alert-warning">You do not have permision to view records.</div>
+    return;
+}
+
+@if (State != null)
+{
+
+    <div class="table-resposive">
+
+    <table class="table table-striped responsive-utilities jambo_table dataTables" id="tblState">
+        <thead>
+            <tr>
+                <th style="width:7%"><input type="checkbox" class="selState" onclick="checkAll(this, 'selState');" /></th>
+                <th>State Name</th>
+				<th>State Code</th>
+                <th>Edit</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var sta in State)
+            {
+                <tr>
+                    <td style="width:7%"><input type="checkbox" value="@sta.stateID" class="selState" /></td>
+                    <td><span class="underline">@sta.stateName</span></td>
+					<td><span class="underline">@sta.stateCode</span></td>
+                    <td style="width:7%">
+                        <a data-id="@sta.stateID" onclick="javascript: ld_modal_fm('/Administration/AddEditState', 'modalContentLoad', '@sta.stateID');" class="btn btn-metro btn-info btn-xs">
+                            <i class="fa fa-pencil"></i>
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    </div>
+
+}
+else
+{
+    <div class="alert alert-warning">No record to display</div>
+}
+
+<script>
+    styleTable('tblState');
+</script>
+
+
+

@@ -1,0 +1,67 @@
+﻿@using WebForTraining.Models;
+@using WebForTraining.Database;
+@{
+
+    Layout = null;
+    var Port = Administration.getPort();
+
+    var UserID = int.Parse(Session["UserID"].ToString());
+    List<ClsUserDisplay> userDisplay = new List<ClsUserDisplay>();
+    using (tdoEntities db = new tdoEntities())
+    {
+        userDisplay = db.uspGetUserDisplay(UserID).ToList<ClsUserDisplay>();
+    }
+    List<string> viewableForms = Restriction.GetViewableForms(userDisplay);
+}
+
+@if (!viewableForms.Contains("Port"))
+{
+    <div class="alert alert-warning">You do not have permision to view records.</div>
+    return;
+}
+
+@if (Port != null)
+{
+
+    <div class="table-resposive">
+
+    <table class="table table-striped responsive-utilities jambo_table dataTables" id="tblPort">
+        <thead>
+            <tr>
+                <th style="width:7%"><input type="checkbox" class="selPort" onclick="checkAll(this, 'selPort');" /></th>
+                <th>Port Name</th>
+				<th>Location</th>
+                <th>Edit</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var por in Port)
+            {
+                <tr>
+                    <td style="width:7%"><input type="checkbox" value="@por.portID" class="selPort" /></td>
+                    <td><span class="underline">@por.portName</span></td>
+					<td><span class="underline">@por.locationName</span></td>
+                    <td style="width:7%">
+                        <a data-id="@por.portID" onclick="javascript: ld_modal_fm('/Administration/AddEditPort', 'modalContentLoad', '@por.portID');" class="btn btn-metro btn-info btn-xs">
+                            <i class="fa fa-pencil"></i>
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    </div>
+
+}
+else
+{
+    <div class="alert alert-warning">No record to display</div>
+}
+
+<script>
+    styleTable('tblPort');
+</script>
+
+
+

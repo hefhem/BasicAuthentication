@@ -1,0 +1,125 @@
+﻿@using WebForTraining.Models;
+@using WebForTraining.Database;
+@{
+    var locationID = int.Parse(Request.Params["id"]);
+    Layout = null;
+    var Location = Administration.getLocation().Where(p => p.locationID == locationID);
+
+    var UserID = int.Parse(Session["UserID"].ToString());
+    List<ClsUserDisplay> userDisplay = new List<ClsUserDisplay>();
+    using (tdoEntities db = new tdoEntities())
+    {
+        userDisplay = db.uspGetUserDisplay(UserID).ToList<ClsUserDisplay>();
+    }
+    List<string> editableForms = Restriction.GetEditableForms(userDisplay);
+    List<string> addableForms = Restriction.GetAddableForms(userDisplay);
+
+}
+
+@if (locationID == 0 && !addableForms.Contains("Location"))
+{
+    <div class="alert alert-warning">You are not allowed to add new record.</div>
+    return;
+}
+else if (locationID != 0 && !editableForms.Contains("Location"))
+{
+    <div class="alert alert-warning">You are not allowed to edit record.</div>
+    return;
+}
+
+@if (locationID == 0)
+{
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">×</span>
+            </button>
+            <h4 class="modal-title" id="myModalLabel2">Add/Edit Location</h4>
+        </div>
+        <form method="post" id="addLocationForm" class="form-horizontal form-label-left">
+            <div class="modal-body ">
+
+                <div class="form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="locationName">
+                        Location Name <span class="required">*</span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input type="text" id="locationName" name="locationName" data-validation="required" class="form-control col-md-7 col-xs-12">
+                        <input type="hidden" id="locationID" name="locationID" value="0">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="regionID">
+                        Region <span class="required">*</span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <select class="form-control col-md-7 col-xs-12" id="regionID" name="regionID" data-validation="required">
+                            <option value="">Select Region</option>
+                            @foreach (var reg in Administration.getRegion())
+                            {
+                                <option value="@reg.regionID">@reg.regionName</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <br />
+
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-success" onclick="javascript: validate_form('addLocationForm', '/Administration/setLocation');">Save</button>
+            </div>
+        </form>
+    </div>
+}
+else
+{
+    foreach (var loc in Location)
+    {
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel2">Add/Edit Location</h4>
+            </div>
+            <form method="post" id="addLocationForm" class="form-horizontal form-label-left">
+                <div class="modal-body ">
+
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="locationName">
+                            Location Name <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="text" id="locationName" name="locationName" data-validation="required" class="form-control col-md-7 col-xs-12" value="@loc.locationName">
+                            <input type="hidden" id="locationID" name="locationID" value="@loc.locationID">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="regionID">
+                            Region <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <select class="form-control col-md-7 col-xs-12" id="regionID" name="regionID" data-validation="required">
+                                <option value="">Select Region</option>
+                                @foreach (var reg in Administration.getRegion())
+                                {
+                                    <option value="@reg.regionID" @(reg.regionID == loc.regionID ? "selected" : "")>@reg.regionName</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+                    <br />
+
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" onclick="javascript: validate_form('addLocationForm', '/Administration/setLocation');">Update</button>
+                </div>
+            </form>
+        </div>
+    }
+}
+

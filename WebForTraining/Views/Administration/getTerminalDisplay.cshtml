@@ -1,0 +1,67 @@
+﻿@using WebForTraining.Models;
+@using WebForTraining.Database;
+@{
+
+    Layout = null;
+    var Terminal = Administration.getTerminal();
+
+    var UserID = int.Parse(Session["UserID"].ToString());
+    List<ClsUserDisplay> userDisplay = new List<ClsUserDisplay>();
+    using (tdoEntities db = new tdoEntities())
+    {
+        userDisplay = db.uspGetUserDisplay(UserID).ToList<ClsUserDisplay>();
+    }
+    List<string> viewableForms = Restriction.GetViewableForms(userDisplay);
+}
+
+@if (!viewableForms.Contains("Terminal"))
+{
+    <div class="alert alert-warning">You do not have permision to view records.</div>
+    return;
+}
+
+@if (Terminal != null)
+{
+
+    <div class="table-resposive">
+
+    <table class="table table-striped responsive-utilities jambo_table dataTables" id="tblTerminal">
+        <thead>
+            <tr>
+                <th style="width:7%"><input type="checkbox" class="selTerminal" onclick="checkAll(this, 'selTerminal');" /></th>
+                <th>Terminal Name</th>
+				<th>Port</th>
+                <th>Edit</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var ter in Terminal)
+            {
+                <tr>
+                    <td style="width:7%"><input type="checkbox" value="@ter.terminalID" class="selTerminal" /></td>
+                    <td><span class="underline">@ter.terminalName</span></td>
+					<td><span class="underline">@ter.portName</span></td>
+                    <td style="width:7%">
+                        <a data-id="@ter.terminalID" onclick="javascript: ld_modal_fm('/Administration/AddEditTerminal', 'modalContentLoad', '@ter.terminalID');" class="btn btn-metro btn-info btn-xs">
+                            <i class="fa fa-pencil"></i>
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    </div>
+
+}
+else
+{
+    <div class="alert alert-warning">No record to display</div>
+}
+
+<script>
+    styleTable('tblTerminal');
+</script>
+
+
+

@@ -1,0 +1,170 @@
+﻿@using WebForTraining.Models;
+@using WebForTraining.Database;
+@{
+    ViewBag.Title = "Setup";
+    Layout = null;
+    var UserGroup = Administration.getUsersGroup();
+}
+
+@*<h2>Setup</h2>*@
+
+<div class="col-md-12 col-sm-12 col-xs-12">
+    <div class="x_panel">
+        <div class="x_title">
+            <h2><i class="fa fa-bars"></i> General Setup </h2>
+            @*<ul class="nav navbar-right panel_toolbox">
+                <li>
+                    <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li>
+                            <a href="#">Settings 1</a>
+                        </li>
+                        <li>
+                            <a href="#">Settings 2</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a class="close-link"><i class="fa fa-close"></i></a>
+                </li>
+            </ul>*@
+            <div class="clearfix"></div>
+        </div>
+        <div class="x_content">
+            
+            <div class="" role="tabpanel" data-example-id="togglable-tabs">
+                <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
+                    <li role="presentation" class="active">
+                        <a href="#usergroup_tab" id="usergroup-tab" role="tab" data-toggle="tab" aria-expanded="true" onclick="javascript: ld_fm('/Administration/getUserGroupDisplay', 'userGroupDetail');">User Group</a>
+                    </li>
+                    <li role="presentation" class="">
+                        <a href="#users_tab" role="tab" id="users-tab" data-toggle="tab" aria-expanded="false" onclick="javascript: ld_fm('/Administration/getUserDisplay', 'userDetail');">Users</a>
+                    </li>
+                    <li role="presentation" class="">
+                        <a href="#menu_tab" role="tab" id="menu-tab" data-toggle="tab" aria-expanded="false" onclick="javascript: ld_fm('/Administration/getMenusDisplay', 'menuDetail');">Menu</a>
+                    </li>
+                    <li role="presentation" class="">
+                        <a href="#menuicons_tab" role="tab" id="menuicons-tab" data-toggle="tab" aria-expanded="false" onclick="javascript: ld_fm('/Administration/getMenuIconsDisplay', 'menuIconsDetail');">Menu Icons</a>
+                    </li>
+                    <li role="presentation" class="">
+                        <a href="#menuitem_tab" role="tab" id="menuitem_tab-tab" data-toggle="tab" aria-expanded="false" onclick="javascript: ld_fm('/Administration/getMenuItemsDisplay', 'menuItemsDetail');">Menu Item</a>
+                    </li>
+                    <li role="presentation" class="">
+                        <a href="#form_tab" role="tab" id="form_tab-tab" data-toggle="tab" aria-expanded="false" onclick="javascript: ld_fm('/Administration/getFormsDisplay', 'formsDetail');">Form</a>
+                    </li>
+                    <li role="presentation" class="">
+                        <a href="#accesslevel_tab" role="tab" id="accesslevel-tab" data-toggle="tab" aria-expanded="false">Access Levels</a>
+                    </li>
+                </ul>
+
+                <div id="myTabContent" class="tab-content">
+
+                    <div role="tabpanel" class="tab-pane fade active in" id="usergroup_tab" aria-labelledby="usergroup-tab">
+                        <button type="button" id="btnRefreshUserGroup" class="btn btn-primary refresh" onclick="javascript:ld_fm('/Administration/getUserGroupDisplay', 'userGroupDetail');" title="Click to refresh">
+                            <i class="fa fa-refresh"></i>
+                        </button>
+                        <button data-toggle="modal" id="btnAddUserGroup" type="button" onclick="javascript: ld_modal_fm('/Administration/AddEditUserGroup', 'modalContentLoad', '0');" class="btn btn-primary" title="Click to Add New Record">
+                            <i class=" fa fa-plus"></i>
+                        </button>
+                        <button id="btnDelUserGroup" type="button" onclick="javascript: splitCheckboxIdDelete('selUserGroup', 'tblUserGroup', '/Administration/deleteUsersGroup');" class="btn btn-danger" title="Click to Delete Record">
+                            <i class=" fa fa-trash"></i>
+                        </button>
+                        <div id="userGroupDetail" class="userGroupDetail">
+                        </div>
+                    </div>
+
+                    <div role="tabpanel" class="tab-pane fade" id="users_tab" aria-labelledby="users-tab">
+                        <button type="button" id="btnRefreshUsers" class="btn btn-primary refresh" onclick="javascript:ld_fm('/Administration/getUserDisplay', 'userDetail');" title="Click to refresh">
+                            <i class="fa fa-refresh"></i>
+                        </button>
+                        <button data-toggle="modal" id="btnAddUser" type="button" onclick="javascript: ld_modal_fm('/Administration/AddEditUser', 'modalContentLoad', '0');" class="btn btn-primary" title="Click to Add New Record">
+                            <i class=" fa fa-plus"></i>
+                        </button>
+                        <button id="btnDelUser" type="button" onclick="javascript: splitCheckboxIdDelete('selUsers', 'tblUsers', '/Administration/deleteUser');" class="btn btn-danger" title="Click to Delete Record">
+                            <i class=" fa fa-trash"></i>
+                        </button>
+                        <div id="userDetail" class="userDetail">
+                        </div>
+                    </div>
+                    <div role="tabpanel" class="tab-pane fade" id="menu_tab" aria-labelledby="menu-tab">
+                        <button type="button" id="btnRefreshMenu" class="btn btn-primary refresh" onclick="javascript: ld_fm('/Administration/getMenusDisplay', 'menuDetail');" title="Click to refresh">
+                            <i class="fa fa-refresh"></i>
+                        </button>
+                        <button data-toggle="modal" id="btnAddMenu" type="button" onclick="javascript: ld_modal_fm('/Administration/AddEditMenus', 'modalContentLoad', '0');" class="btn btn-primary" title="Click to Add New Record">
+                            <i class=" fa fa-plus"></i>
+                        </button>
+                        <button id="btnDelMenu" type="button" onclick="javascript: splitCheckboxIdDelete('selMenus', 'tblMenus', '/Administration/deleteMenus');" class="btn btn-danger" title="Click to Delete Record">
+                            <i class=" fa fa-trash"></i>
+                        </button>
+                        <div id="menuDetail" class="menuDetail">
+                        </div>
+                    </div>
+                    <div role="tabpanel" class="tab-pane fade" id="menuicons_tab" aria-labelledby="menuicons-tab">
+                        <button type="button" id="btnRefreshMenuIcons" class="btn btn-primary refresh" onclick="javascript: ld_fm('/Administration/getMenuIconsDisplay', 'menuIconsDetail');" title="Click to refresh">
+                            <i class="fa fa-refresh"></i>
+                        </button>
+                        <button data-toggle="modal" id="btnAddMenuIcons" type="button" onclick="javascript: ld_modal_fm('/Administration/AddEditMenuIcons', 'modalContentLoad', '0');" class="btn btn-primary" title="Click to Add New Record">
+                            <i class=" fa fa-plus"></i>
+                        </button>
+                        <button id="btnDelMenuIcons" type="button" onclick="javascript: splitCheckboxIdDelete('selMenuIcons', 'tblMenuIcons', '/Administration/deleteMenuIcons');" class="btn btn-danger" title="Click to Delete Record">
+                            <i class=" fa fa-trash"></i>
+                        </button>
+                        <div id="menuIconsDetail" class="menuIconsDetail">
+                        </div>
+                    </div>
+                    <div role="tabpanel" class="tab-pane fade" id="menuitem_tab" aria-labelledby="menuitem-tab">
+                        <button type="button" id="btnRefreshMenuItem" class="btn btn-primary refresh" onclick="javascript: ld_fm('/Administration/getMenuItemsDisplay', 'menuItemsDetail');" title="Click to refresh">
+                            <i class="fa fa-refresh"></i>
+                        </button>
+                        <button data-toggle="modal" id="btnAddMenuItem" type="button" onclick="javascript: ld_modal_fm('/Administration/AddEditMenuItems', 'modalContentLoad', '0');" class="btn btn-primary" title="Click to Add New Record">
+                            <i class=" fa fa-plus"></i>
+                        </button>
+                        <button id="btnDelMenuItem" type="button" onclick="javascript: splitCheckboxIdDelete('selMenuItems', 'tblMenuItems', '/Administration/deleteMenuItems');" class="btn btn-danger" title="Click to Delete Record">
+                            <i class=" fa fa-trash"></i>
+                        </button>
+                        <div id="menuItemsDetail" class="menuItemsDetail">
+                        </div>
+                    </div>
+                    <div role="tabpanel" class="tab-pane fade" id="form_tab" aria-labelledby="form-tab">
+                        <button type="button" id="btnRefreshForm" class="btn btn-primary refresh" onclick="javascript: ld_fm('/Administration/getFormsDisplay', 'formsDetail');" title="Click to refresh">
+                            <i class="fa fa-refresh"></i>
+                        </button>
+                        <button data-toggle="modal" id="btnAddForm" type="button" onclick="javascript: ld_modal_fm('/Administration/AddEditForms', 'modalContentLoad', '0');" class="btn btn-primary" title="Click to Add New Record">
+                            <i class=" fa fa-plus"></i>
+                        </button>
+                        <button id="btnDelForm" type="button" onclick="javascript: splitCheckboxIdDelete('selForms', 'tblForms', '/Administration/deleteForms');" class="btn btn-danger" title="Click to Delete Record">
+                            <i class=" fa fa-trash"></i>
+                        </button>
+                        <div id="formsDetail" class="formsDetail">
+                        </div>
+                    </div>
+                    <div role="tabpanel" class="tab-pane fade" id="accesslevel_tab" aria-labelledby="accesslevel-tab">
+                        <div class="form-group">
+                            <select class="form-control col-md-3 col-sm-3" style="width:20%;" id="userGroupID" name="userGroupID" data-validation="required" onchange="this.value && ld_fm_with_id(this.value, '/Administration/getAccessLevel', 'accessLevelDetail');">
+                                <option value="">Select a User Group</option>
+                                @foreach (var usrgrp in Administration.getUsersGroup())
+                                {
+                                    <option value="@usrgrp.userGroupID">@usrgrp.groupName</option>
+                                }
+                            </select>
+                            <span>&nbsp;</span>
+                            <button type="button" id="btnAddAccessLevel" class="btn btn-primary" onclick="javascript: setAccessLevel();" title="Click to Save">
+                                <i class="fa fa-save"></i>
+                            </button>
+                        </div>
+                            <div id="accessLevelDetail" class="accessLevelDetail">
+                            </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    ld_fm('/Administration/getUserGroupDisplay', 'userGroupDetail');
+    //$('.bs-example-modal-sm').modal('show');
+</script>

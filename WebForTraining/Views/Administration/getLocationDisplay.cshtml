@@ -1,0 +1,67 @@
+﻿@using WebForTraining.Models;
+@using WebForTraining.Database;
+@{
+
+    Layout = null;
+    var Location = Administration.getLocation();
+
+    var UserID = int.Parse(Session["UserID"].ToString());
+    List<ClsUserDisplay> userDisplay = new List<ClsUserDisplay>();
+    using (tdoEntities db = new tdoEntities())
+    {
+        userDisplay = db.uspGetUserDisplay(UserID).ToList<ClsUserDisplay>();
+    }
+    List<string> viewableForms = Restriction.GetViewableForms(userDisplay);
+}
+
+@if (!viewableForms.Contains("Location"))
+{
+    <div class="alert alert-warning">You do not have permision to view records.</div>
+    return;
+}
+
+@if (Location != null)
+{
+
+    <div class="table-resposive">
+
+    <table class="table table-striped responsive-utilities jambo_table dataTables" id="tblLocation">
+        <thead>
+            <tr>
+                <th style="width:7%"><input type="checkbox" class="selLocation" onclick="checkAll(this, 'selLocation');" /></th>
+                <th>Location Name</th>
+				<th>Region</th>
+                <th>Edit</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var loc in Location)
+            {
+                <tr>
+                    <td style="width:7%"><input type="checkbox" value="@loc.locationID" class="selLocation" /></td>
+                    <td><span class="underline">@loc.locationName</span></td>
+					<td><span class="underline">@loc.regionName</span></td>
+                    <td style="width:7%">
+                        <a data-id="@loc.locationID" onclick="javascript: ld_modal_fm('/Administration/AddEditLocation', 'modalContentLoad', '@loc.locationID');" class="btn btn-metro btn-info btn-xs">
+                            <i class="fa fa-pencil"></i>
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    </div>
+
+}
+else
+{
+    <div class="alert alert-warning">No record to display</div>
+}
+
+<script>
+    styleTable('tblLocation');
+</script>
+
+
+

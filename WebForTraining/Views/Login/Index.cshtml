@@ -1,0 +1,190 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Training | Login</title>
+    <!-- Bootstrap core CSS -->
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../fonts/css/font-awesome.min.css" rel="stylesheet">
+    <link href="../css/animate.min.css" rel="stylesheet">
+    <!-- Custom styling plus plugins -->
+    <link href="../css/custom.css" rel="stylesheet">
+    <link href="../css/icheck/flat/green.css" rel="stylesheet">
+
+    
+    <!--[if lt IE 9]>
+        <script src="../assets/js/ie8-responsive-file-warning.js"></script>
+        <![endif]-->
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+          <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+          <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+        <![endif]-->
+</head>
+<body style="background:#F7F7F7;">
+
+    <div id="wrapper" class="wrapper">
+        <div class="modal-content">
+            <div class="modal-header" style="padding-bottom:0;">
+                @*<div class="animate form">*@
+                <section class="login_content" style="padding-top:0;">
+                    <h1>Login Form</h1>
+                </section>
+                @*</div>*@
+            </div>
+            <form method="post" id="loginForm">
+                <div class="modal-body" style="padding-bottom:1%;">
+
+                    <section class="login_content" style="padding-top:0; padding-bottom:0;">
+                        <div class="form-group">
+                            <input type="text" name="Username" id="username" class="form-control" placeholder="Username" data-validation="required" />
+                        </div>
+                        <div class="form-group">
+                            <input type="password" name="Password" id="Password" class="form-control" placeholder="Password" data-validation="required" />
+                        </div>
+                    </section>
+                    <!-- content -->
+
+                </div>
+                <div class="modal-footer">
+                    <div>
+                        <button type="submit" class="btn btn-default">Log in</button>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+            </form>
+            <!-- form -->   
+        </div>
+    </div>
+    <script src="../js/jquery.min.js"></script>
+    @*<script src="../js/custom.js"></script>*@
+    <script src="../Asset/form-validator/jquery.form-validator.js"></script>
+    @*<script src="../js/myScript.js"></script>*@
+    <!-- PNotify -->
+    <script src="../js/notify/pnotify.core.js"></script>
+    <script src="../js/notify/pnotify.buttons.js"></script>
+    <script src="../js/notify/pnotify.nonblock.js"></script>
+    <script>
+        $(document).ready(function () {
+            $.validate({
+                form: '#loginForm',
+                modules: 'security',
+                onError: function () {
+                    return false; // Will stop the submission of the form
+                },
+                onSuccess: function ($form) {
+                    //alert('The form is valid!');
+                    //alertMsg('Notification', 'This form is valid', 'success');
+                    Login($form);
+                    return false; // Will stop the submission of the form
+                }
+            });
+        });
+        
+
+        function Login($form) {
+
+            $.ajax({
+                type: "POST",
+                url: '/Login/Validate',
+                dataType: 'json',
+                data: $form.serialize()
+            }).done(function (dt) {
+                //alert(dt);
+                //console.log(dt);
+                if (dt.isSuccess == 1) {
+                    alertMsg('Notification', 'Access granted', 'success');
+                    window.location.replace("/Home/Index");
+                }
+                else if (dt.isSuccess == 0 && dt.msg == "PRYP") {
+                    alertMsg('Notification', 'Please reset your password', 'error');
+                    ld_fm_no_id("/Administration/resetPassword", "wrapper");
+
+                } else {
+                    alertMsg('Notification', dt.msg, 'error');
+                }
+            }).fail(function (jqXHR, textStatus) {
+                alertMsg('Notification', textStatus, 'error');
+                //alert(textStatus);
+            });
+
+            //alert('called finally');
+            return false;
+        }
+        function resetPassword() {
+
+            var newPassword = $.trim($("#newPassword").val());
+            var confirmNewPassword = $.trim($("#confirmNewPassword").val());
+
+            if (newPassword.length < 1 ){
+                alertMsg('Notification', 'Please enter a valid password.', 'error');
+                return;
+            }
+            if (newPassword != confirmNewPassword) {
+                alertMsg('Notification', 'The password you enterd does not match.', 'error');
+                return;
+            }
+
+            $.ajax({
+                type: "POST",
+                url: '/Administration/setResetPassword',
+                dataType: 'json',
+                data: $('#resetPasswordForm').serialize()
+            }).done(function (dt) {
+                //alert(dt);
+                //console.log(dt);
+                if (dt.isSuccess == 1) {
+                    alertMsg('Success!', 'Please login again.', 'success');
+                    setTimeout(function () {
+                        window.location.replace("/Login/Index");
+                    }, 2000);
+                   
+                } else {
+                    alertMsg('Notification', dt.msg, 'error');
+                }
+            }).fail(function (jqXHR, textStatus) {
+                alertMsg('Notification', textStatus, 'error');
+                //alert(textStatus);
+            });
+
+            //alert('called finally');
+            return false;
+        }
+
+        function ld_fm_no_id(url, container) {
+            //alert(url + " " + container);
+            var link = url;
+            var cnt = container;
+            $("." + cnt).html(loading);
+            $("." + cnt).load(link, function (response, status, xhr) {
+                if (status == "error") {
+                    var msg = "Sorry but there was an error: " + xhr.status + " " + xhr.statusText;
+                    //$("." + cnt).html(msg + xhr.status + " " + xhr.statusText);
+                    alertMsg('Notification', msg, 'error');
+                }
+            }
+            );
+            return false;
+        }
+
+        function alertMsg(ttl, msg, cls) {
+            //alert(msg)
+            new PNotify({
+                title: ttl,
+                text: msg,
+                type: cls
+            });
+        };
+
+</script>
+</body>
+</html>

@@ -1,0 +1,143 @@
+﻿@using WebForTraining.Models;
+@using WebForTraining.Database;
+@{
+    var truckID = int.Parse(Request.Params["id"]);
+    Layout = null;
+    var Truck = Administration.getTruck().Where(p => p.truckID == truckID);
+
+    var UserID = int.Parse(Session["UserID"].ToString());
+    List<ClsUserDisplay> userDisplay = new List<ClsUserDisplay>();
+    using (tdoEntities db = new tdoEntities())
+    {
+        userDisplay = db.uspGetUserDisplay(UserID).ToList<ClsUserDisplay>();
+    }
+    List<string> editableForms = Restriction.GetEditableForms(userDisplay);
+    List<string> addableForms = Restriction.GetAddableForms(userDisplay);
+
+}
+
+@if (truckID == 0 && !addableForms.Contains("Truck"))
+{
+    <div class="alert alert-warning">You are not allowed to add new record.</div>
+    return;
+}
+else if (truckID != 0 && !editableForms.Contains("Truck"))
+{
+    <div class="alert alert-warning">You are not allowed to edit record.</div>
+    return;
+}
+
+@if (truckID == 0)
+{
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">×</span>
+            </button>
+            <h4 class="modal-title" id="myModalLabel2">Add/Edit Truck</h4>
+        </div>
+        <form method="post" id="addTruckForm" class="form-horizontal form-label-left">
+            <div class="modal-body ">
+
+                <div class="form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="truckName">
+                        Truck Name <span class="required">*</span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input type="text" id="truckName" name="truckName" data-validation="required" class="form-control col-md-7 col-xs-12">
+                        <input type="hidden" id="truckID" name="truckID" value="0">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="regNumb">
+                        Registration Number <span class="required">*</span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input type="text" id="regNumb" name="regNumb" data-validation="required" class="form-control col-md-7 col-xs-12">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="truckTypeID">
+                        Truck Type <span class="required">*</span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <select class="form-control col-md-7 col-xs-12" id="truckTypeID" name="truckTypeID" data-validation="required">
+                            <option value="">Select TruckType</option>
+                            @foreach (var ttp in Administration.getTruckType())
+                            {
+                                <option value="@ttp.truckTypeID">@ttp.truckTypeName</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <br />
+
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-success" onclick="javascript: validate_form('addTruckForm', '/Administration/setTruck');">Save</button>
+            </div>
+        </form>
+    </div>
+}
+else
+{
+    foreach (var tru in Truck)
+    {
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel2">Add/Edit Truck</h4>
+            </div>
+            <form method="post" id="addTruckForm" class="form-horizontal form-label-left">
+                <div class="modal-body ">
+
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="truckName">
+                            Truck Name <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="text" id="truckName" name="truckName" data-validation="required" class="form-control col-md-7 col-xs-12" value="@tru.truckName">
+                            <input type="hidden" id="truckID" name="truckID" value="@tru.truckID">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="regNumb">
+                            Registration Number <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="text" id="regNumb" name="regNumb" data-validation="required" class="form-control col-md-7 col-xs-12" value="@tru.regNumb">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="truckTypeID">
+                            Truck Type <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <select class="form-control col-md-7 col-xs-12" id="truckTypeID" name="truckTypeID" data-validation="required">
+                                <option value="">Select Truck Type</option>
+                                @foreach (var ttp in Administration.getTruckType())
+                                {
+                                    <option value="@ttp.truckTypeID" @(ttp.truckTypeID == tru.truckTypeID ? "selected" : "")>@ttp.truckTypeName</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+                    <br />
+
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" onclick="javascript: validate_form('addTruckForm', '/Administration/setTruck');">Update</button>
+                </div>
+            </form>
+        </div>
+    }
+}
+

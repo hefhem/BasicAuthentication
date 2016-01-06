@@ -1,0 +1,177 @@
+﻿@using WebForTraining.Models;
+@using WebForTraining.Database;
+@{
+    var usrID = int.Parse(Request.Params["id"]);
+    //var token = Session["Token"].ToString();
+    Layout = null;
+    //List<string> AuthForms = (List<string>)Session["Forms"];
+    var Users = Administration.getUsers().Where(p => p.userID == usrID);
+    var UserID = int.Parse(Session["UserID"].ToString());
+    List<ClsUserDisplay> userDisplay = new List<ClsUserDisplay>();
+    using (tdoEntities db = new tdoEntities())
+    {
+        userDisplay = db.uspGetUserDisplay(UserID).ToList<ClsUserDisplay>();
+    }
+    List<string> editableForms = Restriction.GetEditableForms(userDisplay);
+    List<string> addableForms = Restriction.GetAddableForms(userDisplay);
+}
+
+@if (usrID == 0 && !addableForms.Contains("Users"))
+{
+    <div class="alert alert-warning">You are not allowed to add new record.</div>
+    return;
+}
+else if (usrID != 0 && !editableForms.Contains("Users"))
+{
+    <div class="alert alert-warning">You are not allowed to edit record.</div>
+    return;
+}
+
+@if (usrID == 0) {
+<div class="modal-content">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+        </button>
+        <h4 class="modal-title" id="myModalLabel2">Add/Edit User</h4>
+    </div>
+    <form method="post" id="addUserForm" class="form-horizontal form-label-left">
+        <div class="modal-body ">
+            <div class="form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="userName">
+                    User Name <span class="required">*</span>
+                </label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input type="text" id="userName" name="userName" data-validation="required" class="form-control col-md-7 col-xs-12">
+                    <input type="hidden" id="userID" name="userID" value="0">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="Password">
+                    Password <span class="required">*</span>
+                </label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input type="password" id="Password" name="Password"
+                           data-validation="required" class="form-control col-md-7 col-xs-12">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="userGroupID">
+                    User Group <span class="required">*</span>
+                </label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <select class="form-control col-md-7 col-xs-12" id="userGroupID" name="userGroupID" data-validation="required">
+                        <option value="">Select a User Group</option>
+                        @foreach (var usrgrp in Administration.getUsersGroup())
+                        {
+                            <option value="@usrgrp.userGroupID">@usrgrp.groupName</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="isLocked">
+                   Lock <span class="required">*</span>
+                </label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <select class="form-control col-md-7 col-xs-12" id="isLocked" name="isLocked">
+                        <option value="0">No</option>
+                        <option value="1">yes</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="resetPassword">
+                    Reset Password <span class="required">*</span>
+                </label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <select class="form-control col-md-7 col-xs-12" id="resetPassword" name="resetPassword">
+                        <option value="0">No</option>
+                        <option value="1">yes</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            @*<button type="submit" class="btn btn-primary" data-dismiss="modal">Close</button>*@
+            <button type="submit" class="btn btn-primary" onclick="javascript: validate_form('addUserForm', '/Administration/setUsers');">Save</button>
+        </div>
+    </form>
+</div>
+}
+else
+{
+    foreach (var usr in Users) { 
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">×</span>
+            </button>
+            <h4 class="modal-title" id="myModalLabel2">Add/Edit User</h4>
+        </div>
+        <form method="post" id="addUserForm" class="form-horizontal form-label-left">
+            <div class="modal-body ">
+                <div class="form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="userName">
+                        User Name <span class="required">*</span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input type="text" id="userName" name="userName" data-validation="required" class="form-control col-md-7 col-xs-12" value="@usr.userName">
+                        <input type="hidden" id="userID" name="userID" value="@usr.userID">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="Password">
+                        Password <span class="required"></span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input type="password" id="Password" name="Password" class="form-control col-md-7 col-xs-12" readonly>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="userGroupID">
+                        User Group <span class="required">*</span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <select class="form-control col-md-7 col-xs-12" id="userGroupID" name="userGroupID" data-validation="required">
+                            <option value="">Select a User Group</option>
+                            @foreach (var usrgrp in Administration.getUsersGroup())
+                            {
+                                <option value="@usrgrp.userGroupID" @(usrgrp.userGroupID == usr.userGroupID ? "selected" : "")>@usrgrp.groupName</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="isLocked">
+                        Lock <span class="required">*</span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <select class="form-control col-md-7 col-xs-12" id="isLocked" name="isLocked">
+                            <option value="0" @(usr.isLocked == true ? "selected" : "")>No</option>
+                            <option value="1" @(usr.isLocked == true ? "selected" : "")>Yes</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="resetPassword">
+                        Reset Password <span class="required">*</span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <select class="form-control col-md-7 col-xs-12" id="resetPassword" name="resetPassword">
+                            <option value="0" @(usr.resetPassword == true ? "selected" : "")>No</option>
+                            <option value="1" @(usr.resetPassword == true ? "selected" : "")>Yes</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                @*<button type="submit" class="btn btn-primary" data-dismiss="modal">Close</button>*@
+                <button type="submit" class="btn btn-primary" onclick="javascript: validate_form('addUserForm', '/Administration/setUsers');">Update</button>
+            </div>
+        </form>
+    </div>
+    }
+}
+
+

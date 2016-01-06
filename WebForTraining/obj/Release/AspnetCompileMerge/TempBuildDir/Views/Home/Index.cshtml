@@ -1,0 +1,41 @@
+﻿@using WebForTraining.Models;
+@using WebForTraining.Database;
+@{
+    ViewBag.Title = "Home";
+    //Layout = null;
+    var registerID = 0;
+    if (Request.Params["id"] != null)
+    {
+        registerID = int.Parse(Request.Params["id"]);
+    }
+    var recRegister = Modules.getRegister(0).Where(p => p.status.Contains("Received"));
+    var canRegister = Modules.getRegister(0).Where(p => p.status.Contains("Cancelled"));
+    var ldRegister = Modules.getRegister(0).Where(p => p.status.Contains("Loaded"));
+    var dpRegister = Modules.getRegister(0).Where(p => p.status.Contains("Dispatched"));
+    var expRegister = Modules.getRegister(0).Where(p => p.status.Contains("Received") && p.expiryDate < DateTime.Now);
+    var allRegister = Modules.getRegister(0);
+    var UserID = int.Parse(Session["UserID"].ToString());
+    List<ClsUserDisplay> userDisplay = new List<ClsUserDisplay>();
+    using (tdoEntities db = new tdoEntities())
+    {
+        userDisplay = db.uspGetUserDisplay(UserID).ToList<ClsUserDisplay>();
+    }
+    List<string> viewableForms = Restriction.GetViewableForms(userDisplay);
+}
+
+<div class="pageContent" id="pageContent">
+    <div class="page-head">
+        <h2>@ViewBag.Title </h2>
+    </div>
+
+    <div class="cl-mcont">
+        <h3 class="text-center"></h3>
+    </div>
+</div>
+
+<div class="modal fade" id="modalContent" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" id="modalContentLoad">
+        
+    </div>
+</div>
+

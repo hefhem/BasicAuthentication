@@ -1,0 +1,75 @@
+﻿@using WebForTraining.Models;
+@using WebForTraining.Database;
+@{
+    var userGroupID = int.Parse(Request.Params["id"]);
+    //var token = Session["Token"].ToString();
+    Layout = null;
+    //List<string> AuthForms = (List<string>)Session["Forms"];
+    var AccessLevel = Administration.getAccessLevel(0, userGroupID, 0);
+    var UserID = int.Parse(Session["UserID"].ToString());
+    var UserName = Session["Username"].ToString();
+    List<ClsUserDisplay> userDisplay = new List<ClsUserDisplay>();
+    using (tdoEntities db = new tdoEntities())
+    {
+        userDisplay = db.uspGetUserDisplay(UserID).ToList<ClsUserDisplay>();
+    }
+    List<string> viewableForms = Restriction.GetViewableForms(userDisplay);
+}
+
+@if (!viewableForms.Contains("AccessLevels") && UserName != "Admin")
+{
+    <div class="alert alert-warning">You do not have permision to view records.</div>
+    return;
+}
+@if (AccessLevel != null)
+{
+    <div class="table-resposive">
+        <table class="table table-striped responsive-utilities jambo_table dataTable" id="tblAccessLevel">
+            <thead>
+                <tr>
+                    <th><input type="checkbox" class="selAccessLevel" onclick="checkAllTableBox(this);" /></th>
+                    <th><strong>Menu</strong></th>
+                    <th><strong>Form</strong></th>
+                    <th><strong>Add</strong></th>
+                    <th><strong>View</strong></th>
+                    <th><strong>Edit</strong></th>
+                    <th><strong>Delete</strong></th>
+                    <th><strong>Approve</strong></th>
+                </tr>
+            </thead>
+            <tbody id="tblAccessLevel">
+                @foreach (var acc in AccessLevel)
+                {
+                    <tr>
+                        <td><input type="checkbox" onclick="checkAllRow(this);" id="selChk_@acc.accessLevelID" class=" selaccesslevel" />
+                        <input type="hidden" id="accessLevelID" name="accessLevelID" value="@acc.accessLevelID" /></td>
+                        <td><span class="underline">@acc.menuName</span></td>
+                        <td><input type="hidden" id="formID" name="formID" value="@acc.formID" />@acc.formName</td>
+                        <td><input type="checkbox" onclick="tog(this);" name="canAdd" value="@(acc.canAdd == true ? "true" : "false")" @(acc.canAdd == true ? "checked" : "") class="canAddCls" /></td>
+                        <td><input type="checkbox" onclick="tog(this);" name="canView" value="@(acc.canView == true ? "true" : "false")" @(acc.canView == true ? "checked" : "") class="canViewCls" /></td>
+                        <td><input type="checkbox" onclick="tog(this);" name="canEdit" value="@(acc.canEdit == true ? "true" : "false")" @(acc.canEdit == true ? "checked" : "") class="canEditCls" /></td>
+                        <td><input type="checkbox" onclick="tog(this);" name="canDelete" value="@(acc.canDelete == true ? "true" : "false")" @(acc.canDelete == true ? "checked" : "") class="canDeleteCls" /></td>
+                        <td><input type="checkbox" onclick="tog(this);" name="canApprove" value="@(acc.canApprove == true ? "true" : "false")" @(acc.canApprove == true ? "checked" : "") class="canApproveCls" /></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <div class="alert alert-warning">No record to display</div>
+}
+
+<script>
+    styleTable('tblAccessLevel');
+</script>
+
+
+
+
+
+
+
+
+

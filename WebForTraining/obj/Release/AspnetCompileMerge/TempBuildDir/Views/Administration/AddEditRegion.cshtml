@@ -1,0 +1,96 @@
+﻿@using WebForTraining.Models;
+@using WebForTraining.Database;
+@{
+    var regionID = int.Parse(Request.Params["id"]);
+    Layout = null;
+    var Region = Administration.getRegion().Where(p => p.regionID == regionID);
+
+    var UserID = int.Parse(Session["UserID"].ToString());
+    List<ClsUserDisplay> userDisplay = new List<ClsUserDisplay>();
+    using (tdoEntities db = new tdoEntities())
+    {
+        userDisplay = db.uspGetUserDisplay(UserID).ToList<ClsUserDisplay>();
+    }
+    List<string> editableForms = Restriction.GetEditableForms(userDisplay);
+    List<string> addableForms = Restriction.GetAddableForms(userDisplay);
+
+}
+
+@if (regionID == 0 && !addableForms.Contains("Region"))
+{
+    <div class="alert alert-warning">You are not allowed to add new record.</div>
+    return;
+}
+else if (regionID != 0 && !editableForms.Contains("Region"))
+{
+    <div class="alert alert-warning">You are not allowed to edit record.</div>
+    return;
+}
+
+
+@if (regionID == 0)
+{
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">×</span>
+            </button>
+            <h4 class="modal-title" id="myModalLabel2">Add/Edit Region</h4>
+        </div>
+        <form method="post" id="addRegionForm" class="form-horizontal form-label-left">
+            <div class="modal-body ">
+
+                <div class="form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="region">
+                        Region <span class="required">*</span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input type="text" id="regionName" name="regionName" data-validation="required" class="form-control col-md-7 col-xs-12">
+                        <input type="hidden" id="regionID" name="regionID" value="0">
+                    </div>
+                </div>
+
+                <br />
+
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-success" onclick="javascript: validate_form('addRegionForm', '/Administration/setRegion');">Save</button>
+            </div>
+        </form>
+    </div>
+}
+else
+{
+    foreach (var rgn in Region)
+    {
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel2">Add/Edit Region</h4>
+            </div>
+            <form method="post" id="addRegionForm" class="form-horizontal form-label-left">
+                <div class="modal-body ">
+
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="region">
+                            Region <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="text" id="regionName" name="regionName" data-validation="required" class="form-control col-md-7 col-xs-12" value="@rgn.regionName">
+                            <input type="hidden" id="regionID" name="regionID" value="@rgn.regionID">
+                        </div>
+                    </div>
+
+                    <br />
+
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" onclick="javascript: validate_form('addRegionForm', '/Administration/setRegion');">Update</button>
+                </div>
+            </form>
+        </div>
+    }
+}
+

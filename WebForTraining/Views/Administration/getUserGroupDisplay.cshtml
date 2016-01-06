@@ -1,0 +1,72 @@
+﻿@using WebForTraining.Models;
+@using WebForTraining.Database;
+@{
+    //var employeeID = Request.Params["employeeID"];
+    //var token = Session["Token"].ToString();
+    Layout = null;
+    //List<string> AuthForms = (List<string>)Session["Forms"];
+    var UserGroup = Administration.getUsersGroup();
+    var UserID = int.Parse(Session["UserID"].ToString());
+    List<ClsUserDisplay> userDisplay = new List<ClsUserDisplay>();
+    using (tdoEntities db = new tdoEntities())
+    {
+        userDisplay = db.uspGetUserDisplay(UserID).ToList<ClsUserDisplay>();
+    }
+    List<string> viewableForms = Restriction.GetViewableForms(userDisplay);
+}
+
+@if (!viewableForms.Contains("UsersGroup"))
+{
+    <div class="alert alert-warning">You do not have permision to view records.</div>
+    return;
+}
+
+@if (UserGroup != null)
+{
+    <div class="table-resposive">
+        <table class="table table-striped responsive-utilities jambo_table dataTable" id="tblUsersGroup">
+            <thead>
+                <tr>
+                    <th><input type="checkbox" class="selUserGroup" onclick="checkAll(this, 'selUserGroup');" /></th>
+                    <th><strong>Group Name</strong></th>
+                    <th><strong>Description</strong></th>
+                    <th><strong></strong></th>
+                </tr>
+            </thead>
+            <tbody id="tblUserGroup">
+                @foreach (var grp in UserGroup)
+                {
+                    <tr>
+                        <td><input type="checkbox" value="@grp.userGroupID" class="selUserGroup" /></td>
+                        <td><span class="underline">@grp.groupName</span></td>
+                        <td>@grp.description</td>
+                        <td>
+                            <a data-id="@grp.userGroupID" onclick="javascript: ld_modal_fm('/Administration/AddEditUserGroup', 'modalContentLoad', '@grp.userGroupID');" class="btn btn-metro btn-info btn-xs">
+                                <i class="fa fa-pencil"></i>
+                            </a>
+                            @*<a data-id="@grp.userGroupID"  class="btn btn-metro btn-default btn-xs">
+                                <i class="glyphicon glyphicon-trash"></i>
+                            </a>*@
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <div class="alert alert-warning">No record to display</div>
+}
+
+<script>
+    styleTable('tblUsersGroup');
+</script>
+
+
+
+
+
+
+
+

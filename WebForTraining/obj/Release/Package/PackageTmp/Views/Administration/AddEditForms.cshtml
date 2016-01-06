@@ -1,0 +1,139 @@
+﻿@using WebForTraining.Models;
+@using WebForTraining.Database;
+@{
+    var formID = int.Parse(Request.Params["id"]);
+    //var token = Session["Token"].ToString();
+    Layout = null;
+    //List<string> AuthForms = (List<string>)Session["Forms"];
+
+    var Forms = Administration.getForms(formID);
+    var UserID = int.Parse(Session["UserID"].ToString());
+    List<ClsUserDisplay> userDisplay = new List<ClsUserDisplay>();
+    using (tdoEntities db = new tdoEntities())
+    {
+        userDisplay = db.uspGetUserDisplay(UserID).ToList<ClsUserDisplay>();
+    }
+    List<string> editableForms = Restriction.GetEditableForms(userDisplay);
+    List<string> addableForms = Restriction.GetAddableForms(userDisplay);
+}
+
+@if (formID == 0 && !addableForms.Contains("Forms"))
+{
+    <div class="alert alert-warning">You are not allowed to add new record.</div>
+    return;
+}
+else if (formID != 0 && !editableForms.Contains("Forms"))
+{
+    <div class="alert alert-warning">You are not allowed to edit record.</div>
+    return;
+}
+
+@if (formID == 0)
+{
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">×</span>
+            </button>
+            <h4 class="modal-title" id="myModalLabel2">Add/Edit Forms</h4>
+        </div>
+        <form method="post" id="addFormsForm" class="form-horizontal form-label-left">
+            <div class="modal-body ">
+                <div class="form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="menuItemID">
+                        Menu Item <span class="required">*</span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <select class="form-control col-md-7 col-xs-12" id="menuItemID" name="menuItemID" data-validation="required">
+                            <option value="">Select a Menu</option>
+                            @foreach (var menu in Administration.getMenuItems(0))
+                            {
+                                <option value="@menu.menuItemID">@menu.menuItemName</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="formName">
+                        Form Name <span class="required">*</span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input type="text" id="formName" name="formName" data-validation="required" class="form-control col-md-7 col-xs-12">
+                        <input type="hidden" id="formID" name="formID" value="0">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="formDescription">
+                        Description <span class="required">*</span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input type="text" id="formDescription" name="formDescription" data-validation="required" class="form-control col-md-7 col-xs-12">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                @*<button type="submit" class="btn btn-primary" data-dismiss="modal">Close</button>*@
+                <button type="submit" class="btn btn-success" onclick="javascript: validate_form('addFormsForm', '/Administration/setForms');">Save</button>
+            </div>
+        </form>
+    </div>
+}
+else
+{
+    foreach (var fm in Forms)
+    {
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel2">Add/Edit Forms</h4>
+            </div>
+            <form method="post" id="addFormsForm" class="form-horizontal form-label-left">
+                <div class="modal-body ">
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="menuItemID">
+                            Menu Item <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <select class="form-control col-md-7 col-xs-12" id="menuItemID" name="menuItemID" data-validation="required">
+                                <option value="">Select a Menu</option>
+                                @foreach (var menu in Administration.getMenuItems(0))
+                            {
+                                    <option value="@menu.menuItemID" @(menu.menuItemID == fm.menuItemID ? "selected" : "")>@menu.menuItemName</option>
+                            }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="formName">
+                            Form Name <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="text" id="formName" name="formName" 
+                                   data-validation="required" class="form-control col-md-7 col-xs-12" value="@fm.formName">
+                            <input type="hidden" id="formID" name="formID" value="@fm.formID">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="formDescription">
+                            Description <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="text" id="formDescription" name="formDescription" 
+                                   data-validation="required" class="form-control col-md-7 col-xs-12" value="@fm.formDescription">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    @*<button type="submit" class="btn btn-primary" data-dismiss="modal">Close</button>*@
+                    <button type="submit" class="btn btn-success" onclick="javascript: validate_form('addFormsForm', '/Administration/setForms');">Save</button>
+                </div>
+            </form>
+        </div>
+    }
+}
+
+
+
+

@@ -1,0 +1,143 @@
+﻿@using WebForTraining.Models;
+@using WebForTraining.Database;
+@{
+    var cityID = int.Parse(Request.Params["id"]);
+    Layout = null;
+    var City = Administration.getCity().Where(p => p.cityID == cityID);
+
+    var UserID = int.Parse(Session["UserID"].ToString());
+    List<ClsUserDisplay> userDisplay = new List<ClsUserDisplay>();
+    using (tdoEntities db = new tdoEntities())
+    {
+        userDisplay = db.uspGetUserDisplay(UserID).ToList<ClsUserDisplay>();
+    }
+    List<string> editableForms = Restriction.GetEditableForms(userDisplay);
+    List<string> addableForms = Restriction.GetAddableForms(userDisplay);
+
+}
+
+@if (cityID == 0 && !addableForms.Contains("City"))
+{
+    <div class="alert alert-warning">You are not allowed to add new record.</div>
+    return;
+}
+else if (cityID != 0 && !editableForms.Contains("City"))
+{
+    <div class="alert alert-warning">You are not allowed to edit record.</div>
+    return;
+}
+
+@if (cityID == 0)
+{
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">×</span>
+            </button>
+            <h4 class="modal-title" id="myModalLabel2">Add/Edit City</h4>
+        </div>
+        <form method="post" id="addCityForm" class="form-horizontal form-label-left">
+            <div class="modal-body ">
+
+                <div class="form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="cityName">
+                        City Name <span class="required">*</span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input type="text" id="cityName" name="cityName" data-validation="required" class="form-control col-md-7 col-xs-12">
+                        <input type="hidden" id="cityID" name="cityID" value="0">
+                    </div>
+                </div>
+				
+				<div class="form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="cityCode">
+                        City Code <span class="required">*</span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input type="text" id="cityCode" name="cityCode" data-validation="required" class="form-control col-md-7 col-xs-12">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="stateID">
+                        State <span class="required">*</span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <select class="form-control col-md-7 col-xs-12" id="stateID" name="stateID" data-validation="required">
+                            <option value="">Select State</option>
+                            @foreach (var sta in Administration.getState())
+                            {
+                                <option value="@sta.stateID">@sta.stateName</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <br />
+
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-success" onclick="javascript: validate_form('addCityForm', '/Administration/setCity');">Save</button>
+            </div>
+        </form>
+    </div>
+}
+else
+{
+    foreach (var cit in City)
+    {
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel2">Add/Edit City</h4>
+            </div>
+            <form method="post" id="addCityForm" class="form-horizontal form-label-left">
+                <div class="modal-body ">
+
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="cityName">
+                            City Name <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="text" id="cityName" name="cityName" data-validation="required" class="form-control col-md-7 col-xs-12" value="@cit.cityName">
+                            <input type="hidden" id="cityID" name="cityID" value="@cit.cityID">
+                        </div>
+                    </div>
+					
+					<div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="cityCode">
+                            City Code <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="text" id="cityCode" name="cityCode" data-validation="required" class="form-control col-md-7 col-xs-12" value="@cit.cityCode">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="stateID">
+                            State <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <select class="form-control col-md-7 col-xs-12" id="stateID" name="stateID" data-validation="required">
+                                <option value="">Select State</option>
+                                @foreach (var sta in Administration.getState())
+                                {
+                                    <option value="@sta.stateID" @(sta.stateID == cit.stateID ? "selected" : "")>@sta.stateName</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+                    <br />
+
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" onclick="javascript: validate_form('addCityForm', '/Administration/setCity');">Update</button>
+                </div>
+            </form>
+        </div>
+    }
+}
+

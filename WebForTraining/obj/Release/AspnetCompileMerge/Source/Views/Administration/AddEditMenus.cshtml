@@ -1,0 +1,125 @@
+﻿@using WebForTraining.Models;
+@using WebForTraining.Database;
+@{
+    var menuID = int.Parse(Request.Params["id"]);
+    //var token = Session["Token"].ToString();
+    Layout = null;
+    //List<string> AuthForms = (List<string>)Session["Forms"];
+
+    var Menus = Administration.getMenus(menuID);
+    var UserID = int.Parse(Session["UserID"].ToString());
+    List<ClsUserDisplay> userDisplay = new List<ClsUserDisplay>();
+    using (tdoEntities db = new tdoEntities())
+    {
+        userDisplay = db.uspGetUserDisplay(UserID).ToList<ClsUserDisplay>();
+    }
+    List<string> editableForms = Restriction.GetEditableForms(userDisplay);
+    List<string> addableForms = Restriction.GetAddableForms(userDisplay);
+}
+
+@if (menuID == 0 && !addableForms.Contains("Menus"))
+{
+    <div class="alert alert-warning">You are not allowed to add new record.</div>
+    return;
+}
+else if (menuID != 0 && !editableForms.Contains("Menus"))
+{
+    <div class="alert alert-warning">You are not allowed to edit record.</div>
+    return;
+}
+
+@if (menuID == 0)
+{
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">×</span>
+            </button>
+            <h4 class="modal-title" id="myModalLabel2">Add/Edit Menus</h4>
+        </div>
+        <form method="post" id="addMenusForm" class="form-horizontal form-label-left">
+            <div class="modal-body ">
+                <div class="form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="menuName">
+                        Menu Name <span class="required">*</span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input type="text" id="menuName" name="menuName" data-validation="required" class="form-control col-md-7 col-xs-12">
+                        <input type="hidden" id="menuID" name="menuID" value="0">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="menuDesc">
+                        Description <span class="required">*</span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input type="text" id="menuDesc" name="menuDesc" data-validation="required" class="form-control col-md-7 col-xs-12">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="menuRanking">
+                        Rank <span class="required">*</span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input type="text" id="menuRanking" name="menuRanking" data-validation="number" data-validation-allowing="range[1;1000]"
+                               class="form-control col-md-7 col-xs-12">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                @*<button type="submit" class="btn btn-primary" data-dismiss="modal">Close</button>*@
+                <button type="submit" class="btn btn-success" onclick="javascript: validate_form('addMenusForm', '/Administration/setMenus');">Save</button>
+            </div>
+        </form>
+    </div>
+}
+else
+{
+    foreach (var mn in Menus)
+    {
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel2">Add/Edit Menus</h4>
+            </div>
+            <form method="post" id="addMenusForm" class="form-horizontal form-label-left">
+                <div class="modal-body ">
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="menuName">
+                            Menu Name <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="text" id="menuName" name="menuName" data-validation="required" class="form-control col-md-7 col-xs-12" value="@mn.menuName">
+                            <input type="hidden" id="menuID" name="menuID" value="@mn.menuID">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="menuDesc">
+                            Description <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="text" id="menuDesc" name="menuDesc" data-validation="required" class="form-control col-md-7 col-xs-12" value="@mn.menuDesc">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="menuRanking">
+                            Rank <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="text" id="menuRanking" name="menuRanking" data-validation="number" data-validation-allowing="range[1;1000]"
+                                   class="form-control col-md-7 col-xs-12" value="@mn.menuRanking">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    @*<button type="submit" class="btn btn-primary" data-dismiss="modal">Close</button>*@
+                    <button type="submit" class="btn btn-primary" onclick="javascript: validate_form('addMenusForm', '/Administration/setMenus');">Update</button>
+                </div>
+            </form>
+        </div>
+    }
+}
+
+

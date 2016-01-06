@@ -1,0 +1,18 @@
+﻿
+@{
+    ViewBag.Title = "CargoType";
+}
+
+<h2>CargoType</h2>
+<form class="form form" id="cargoTypeForm" name='cargoTypeForm' method="post" action="/Home/setCargoType">
+    <div class="form-group">           
+        <div class="input-group">
+            <input type="hidden" id="cargoTypeID" name="cargoTypeID" value="0">
+            <input type="text" class="form-control required" id="cargoTypeName" name="cargoTypeName" placeholder="Cargo Type Name">
+            <input type="hidden" id="createdByID" name="createdByID" value="1">
+            <br/>
+            <button type="submit" class="btn btn-primary" id="login">Save</button>
+        </div>            
+    </div>
+</form>
+

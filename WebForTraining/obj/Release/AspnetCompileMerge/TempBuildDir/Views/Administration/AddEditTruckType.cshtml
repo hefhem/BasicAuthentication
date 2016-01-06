@@ -1,0 +1,95 @@
+﻿@using WebForTraining.Models;
+@using WebForTraining.Database;
+@{
+    var truckTypeID = int.Parse(Request.Params["id"]);
+    Layout = null;
+    var TruckType = Administration.getTruckType().Where(p => p.truckTypeID == truckTypeID);
+    
+    var UserID = int.Parse(Session["UserID"].ToString());
+    List<ClsUserDisplay> userDisplay = new List<ClsUserDisplay>();
+    using (tdoEntities db = new tdoEntities())
+    {
+        userDisplay = db.uspGetUserDisplay(UserID).ToList<ClsUserDisplay>();
+    }
+    List<string> editableForms = Restriction.GetEditableForms(userDisplay);
+    List<string> addableForms = Restriction.GetAddableForms(userDisplay);
+
+}
+
+@if (truckTypeID == 0 && !addableForms.Contains("TruckType"))
+{
+    <div class="alert alert-warning">You are not allowed to add new record.</div>
+    return;
+}
+else if (truckTypeID != 0 && !editableForms.Contains("TruckType"))
+{
+    <div class="alert alert-warning">You are not allowed to edit record.</div>
+    return;
+}
+
+@if (truckTypeID == 0)
+{
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">×</span>
+            </button>
+            <h4 class="modal-title" id="myModalLabel2">Add/Edit Truck Type</h4>
+        </div>
+        <form method="post" id="addTruckTypeForm" class="form-horizontal form-label-left">
+            <div class="modal-body ">
+
+                <div class="form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="truckTypeName">
+                        Truck Type <span class="required">*</span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input type="text" id="truckTypeName" name="truckTypeName" data-validation="required" class="form-control col-md-7 col-xs-12">
+                        <input type="hidden" id="truckTypeID" name="truckTypeID" value="0">
+                    </div>
+                </div>
+
+                <br />
+
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-success" onclick="javascript: validate_form('addTruckTypeForm', '/Administration/setTruckType');">Save</button>
+            </div>
+        </form>
+    </div>
+}
+else
+{
+    foreach (var trk in TruckType)
+    {
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel2">Add/Edit Truck Type</h4>
+            </div>
+            <form method="post" id="addTruckTypeForm" class="form-horizontal form-label-left">
+                <div class="modal-body ">
+
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="truckType">
+                            Truck Type <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="text" id="truckTypeName" name="truckTypeName" data-validation="required" class="form-control col-md-7 col-xs-12" value="@trk.truckTypeName">
+                            <input type="hidden" id="truckTypeID" name="truckTypeID" value="@trk.truckTypeID">
+                        </div>
+                    </div>
+
+                    <br />
+
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" onclick="javascript: validate_form('addTruckTypeForm', '/Administration/setTruckType');">Update</button>
+                </div>
+            </form>
+        </div>
+    }
+}
+
